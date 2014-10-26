@@ -22,6 +22,7 @@ import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
@@ -158,5 +159,9 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 			// Propagate the event
 			this.eventSupport.fireEvent(new ChangeEvent(this));
 		}
+	}
+
+	public List<File> getSelection() {
+		return this.list.getSelectedValuesList();
 	}
 }
