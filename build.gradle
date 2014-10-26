@@ -12,3 +12,8 @@ task wrapper(type: Wrapper) {
   gradleVersion = '2.1'
 }
 
+jar {
+  manifest {
+    attributes += [ 'Main-Class': 'fr.ritaly.dualcommander.DualCommander' ]
+  }
+}
