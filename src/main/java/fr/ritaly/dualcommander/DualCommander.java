@@ -279,59 +279,39 @@ public class DualCommander extends JFrame implements ChangeListener, KeyListener
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		final boolean metaDown = (e.getModifiersEx() | KeyEvent.META_DOWN_MASK) == KeyEvent.META_DOWN_MASK;
+		JTabbedPane tabbedPane = null;
 
 		if (e.getSource() == getLeftPanel()) {
+			tabbedPane = leftTabbedPane;
+		} else if (e.getSource() == getRightPanel()) {
+			tabbedPane = rightTabbedPane;
+		}
+
+		if (tabbedPane != null) {
+			final FileList sourcePanel = (FileList) tabbedPane.getSelectedComponent();
+			final boolean metaDown = (e.getModifiersEx() | KeyEvent.META_DOWN_MASK) == KeyEvent.META_DOWN_MASK;
+
 			if ((e.getKeyCode() == KeyEvent.VK_T) && metaDown) {
 				// Create a new tab
 				// TODO Factor out this logic in a TabbedPane class
-				final FileList newPanel = new FileList(getLeftPanel().getDirectory());
+				final FileList newPanel = new FileList(sourcePanel.getDirectory());
 				newPanel.addChangeListener(this);
 				newPanel.addKeyListener(this);
 
-				leftTabbedPane.addTab(newPanel.getDirectory().getName(), newPanel);
+				tabbedPane.addTab(newPanel.getDirectory().getName(), newPanel);
 			} else if ((e.getKeyCode() == KeyEvent.VK_W) && metaDown) {
-				// Close the current tab (only if not the last one)
-				if (leftTabbedPane.getTabCount() == 1) {
-					return;
+				if (tabbedPane.getTabCount() > 1) {
+					// Close the current tab (only if not the last one)
+					sourcePanel.removeChangeListener(this);
+					sourcePanel.removeKeyListener(this);
+
+					tabbedPane.removeTabAt(tabbedPane.getSelectedIndex());
 				}
-
-				final FileList panel = getLeftPanel();
-				panel.removeChangeListener(this);
-				panel.removeKeyListener(this);
-
-				leftTabbedPane.removeTabAt(leftTabbedPane.getSelectedIndex());
 			} else if ((e.getKeyCode() >= KeyEvent.VK_1) && (e.getKeyCode() <= KeyEvent.VK_9) && metaDown) {
 				final int index = e.getKeyCode() - KeyEvent.VK_1;
 
-				if (index <= leftTabbedPane.getTabCount() - 1) {
-					leftTabbedPane.setSelectedIndex(index);
-				}
-			}
-		} else if (e.getSource() == getRightPanel()) {
-			if ((e.getKeyCode() == KeyEvent.VK_T) && metaDown) {
-				// Create a new tab
-				final FileList newPanel = new FileList(getRightPanel().getDirectory());
-				newPanel.addChangeListener(this);
-				newPanel.addKeyListener(this);
-
-				rightTabbedPane.addTab(newPanel.getDirectory().getName(), newPanel);
-			} else if ((e.getKeyCode() == KeyEvent.VK_W) && metaDown) {
-				// Close the current tab (only if not the last one)
-				if (rightTabbedPane.getTabCount() == 1) {
-					return;
-				}
-
-				final FileList panel = getRightPanel();
-				panel.removeChangeListener(this);
-				panel.removeKeyListener(this);
-
-				rightTabbedPane.removeTabAt(rightTabbedPane.getSelectedIndex());
-			} else if ((e.getKeyCode() >= KeyEvent.VK_1) && (e.getKeyCode() <= KeyEvent.VK_9) && metaDown) {
-				final int index = e.getKeyCode() - KeyEvent.VK_1;
-
-				if (index <= rightTabbedPane.getTabCount() - 1) {
-					rightTabbedPane.setSelectedIndex(index);
+				if (index <= tabbedPane.getTabCount() - 1) {
+					tabbedPane.setSelectedIndex(index);
 				}
 			}
 		}
