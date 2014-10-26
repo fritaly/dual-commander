@@ -37,8 +37,6 @@ public class DualCommander extends JFrame {
 
 	private static final long serialVersionUID = 5445919782222373150L;
 
-	private final JButton viewButton, editButton, copyButton, moveButton, mkdirButton, deleteButton, quitButton;
-
 	// TODO Add icons for each action
 	private final class ViewAction extends AbstractAction {
 		public ViewAction() {
@@ -118,6 +116,20 @@ public class DualCommander extends JFrame {
 		}
 	}
 
+	private final JButton viewButton = new JButton(new ViewAction());
+
+	private final JButton editButton = new JButton(new EditAction());
+
+	private final JButton copyButton = new JButton(new CopyAction());
+
+	private final JButton moveButton = new JButton(new MoveAction());
+
+	private final JButton mkdirButton = new JButton(new MkdirAction());
+
+	private final JButton deleteButton = new JButton(new DeleteAction());
+
+	private final JButton quitButton = new JButton(new QuitAction());
+
 	public DualCommander() {
 		// TODO Generate a fat jar at build time
 		// TODO Insert version number in frame's title & build id
@@ -136,17 +148,10 @@ public class DualCommander extends JFrame {
 		getContentPane().add(new JList<>(), "grow");
 		getContentPane().add(new JList<>(), "grow, wrap");
 
-		this.viewButton = new JButton(new ViewAction());
-		this.editButton = new JButton(new EditAction());
-		this.copyButton = new JButton(new CopyAction());
-		this.moveButton = new JButton(new MoveAction());
-		this.mkdirButton = new JButton(new MkdirAction());
-		this.deleteButton = new JButton(new DeleteAction());
-		this.quitButton = new JButton(new QuitAction());
-
 		// The 7 buttons must all have the same width (they must belong to the
 		// same size group)
-		final JPanel buttonPanel = new JPanel(new MigLayout("insets 0px", StringUtils.repeat("[grow, sizegroup g1]", 7), "[grow]"));
+		final JPanel buttonPanel = new JPanel(
+				new MigLayout("insets 0px", StringUtils.repeat("[grow, sizegroup g1]", 7), "[grow]"));
 		buttonPanel.add(viewButton, "grow");
 		buttonPanel.add(editButton, "grow");
 		buttonPanel.add(copyButton, "grow");
