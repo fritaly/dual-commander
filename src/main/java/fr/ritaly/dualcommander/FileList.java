@@ -46,7 +46,7 @@ import fr.ritaly.dualcommander.event.ChangeEventSupport;
 
 public class FileList extends JPanel implements ListSelectionListener, ChangeEventSource, KeyListener {
 
-	private static final class FileRenderer extends DefaultListCellRenderer {
+	private final class FileRenderer extends DefaultListCellRenderer {
 
 		private static final long serialVersionUID = -8630518399718717693L;
 
@@ -63,7 +63,13 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 				final Font font = component.getFont();
 
 				component.setFont(new Font(font.getName(), Font.BOLD, component.getFont().getSize()));
-				component.setText(String.format("[%s]", file.getName()));
+
+				if (file.equals(getParentDirectory())) {
+					// Render the parent directory entry as ".."
+					component.setText("[..]");
+				} else {
+					component.setText(String.format("[%s]", file.getName()));
+				}
 			} else {
 				component.setText(file.getName());
 			}
@@ -72,12 +78,21 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 		}
 	}
 
-	private static final class FileComparator implements Comparator<File> {
+	private final class FileComparator implements Comparator<File> {
 		@Override
 		public int compare(File f1, File f2) {
 			// Directories come first
 			if (f1.isDirectory()) {
+				if (f1.equals(getParentDirectory())) {
+					// The parent directory always comes first
+					return -1;
+				}
 				if (f2.isDirectory()) {
+					if (f2.equals(getParentDirectory())) {
+						// The parent directory always comes first
+						return -1;
+					}
+
 					// Compare the 2 directories by (case-insensive) name
 					return f1.getName().compareToIgnoreCase(f2.getName());
 				} else {
@@ -99,6 +114,14 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 	private static String getCanonicalPath(File file) {
 		try {
 			return file.getCanonicalPath();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private static File getCanonicalFile(File file) {
+		try {
+			return file.getCanonicalFile();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -145,6 +168,12 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 		return directory;
 	}
 
+	private File getParentDirectory() {
+		final File parentDir = getCanonicalFile(directory).getParentFile();
+
+		return parentDir.exists() ? parentDir : null;
+	}
+
 	public void setDirectory(File directory) {
 		Validate.notNull(directory, "The given directory is null");
 		Validate.isTrue(directory.exists(), String.format("The given directory '%s' doesn't exist", directory.getAbsolutePath()));
@@ -165,6 +194,13 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 				// TODO Define an option to list hidden entries
 				listModel.add(file);
 			}
+		}
+
+		// If there's a parent directory, add an entry rendered as ".."
+		final File parentDir = getCanonicalFile(directory).getParentFile();
+
+		if ((parentDir != null) && parentDir.exists()) {
+			listModel.add(parentDir);
 		}
 	}
 
@@ -210,7 +246,7 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 			}
 		} else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
 			// Return to the parent directory (if any)
-			final File parentDir = getDirectory().getParentFile();
+			final File parentDir = getParentDirectory();
 
 			if (parentDir.exists()) {
 				setDirectory(parentDir);
