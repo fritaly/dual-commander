@@ -121,32 +121,23 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 		Validate.isTrue(directory.exists(), String.format("The given directory '%s' doesn't exist", directory.getAbsolutePath()));
 		Validate.isTrue(directory.isDirectory(), String.format("The given path '%s' doesn't denote a directory", directory.getAbsolutePath()));
 
-		this.directory = directory;
-
-		// Display the (normalized) canonical path
-		directoryLabel.setText(getCanonicalPath(directory));
-		directoryLabel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.GRAY), BorderFactory.createEmptyBorder(2, 2, 2, 2)));
-
 		// Layout, columns & rows
 		setLayout(new MigLayout("insets 0px", "[grow]", "[][grow]"));
 
 		this.listModel = new SortedListModel<File>(new FileComparator());
-
-		// Populate the list with the directory's entries
-		for (File file : directory.listFiles()) {
-			if (!file.isHidden()) {
-				// TODO Define an option to list hidden entries
-				listModel.add(file);
-			}
-		}
 
 		this.list = new JList<>(listModel);
 		this.list.setCellRenderer(new FileRenderer());
 		this.list.addListSelectionListener(this);
 		this.list.addKeyListener(this);
 
+		this.directoryLabel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.GRAY), BorderFactory.createEmptyBorder(2, 2, 2, 2)));
+
 		add(directoryLabel, "grow, span");
 		add(new JScrollPane(list), "grow");
+
+		// Set the directory (this will populate the list)
+		setDirectory(directory);
 	}
 
 	public File getDirectory() {
@@ -162,6 +153,8 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 		this.directory = directory;
 
 		// Refresh the UI
+
+		// Display the (normalized) canonical path
 		directoryLabel.setText(getCanonicalPath(directory));
 
 		this.listModel.clear();
