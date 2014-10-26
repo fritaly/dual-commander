@@ -1,0 +1,14 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'maven'
+
+repositories {
+  mavenCentral()
+}
+
+sourceCompatibility = targetCompatibility = '1.7'
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '2.1'
+}
+
