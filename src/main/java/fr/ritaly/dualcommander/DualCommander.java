@@ -17,15 +17,20 @@
 package fr.ritaly.dualcommander;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
@@ -203,6 +208,25 @@ public class DualCommander extends JFrame implements ChangeListener {
 		buttonPanel.add(quitButton, "grow");
 
 		getContentPane().add(buttonPanel, "grow, span 2");
+
+		// Register shortcuts at a global level (not on every component)
+		final InputMap inputMap = this.leftTabbedPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		final ActionMap actionMap = this.leftTabbedPane.getActionMap();
+
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), "view");
+		actionMap.put("view", viewButton.getAction());
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0), "edit");
+		actionMap.put("edit", editButton.getAction());
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0), "copy");
+		actionMap.put("copy", copyButton.getAction());
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), "move");
+		actionMap.put("move", moveButton.getAction());
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0), "mkdir");
+		actionMap.put("mkdir", mkdirButton.getAction());
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F8, 0), "delete");
+		actionMap.put("delete", deleteButton.getAction());
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.ALT_DOWN_MASK), "quit");
+		actionMap.put("quit", quitButton.getAction());
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
