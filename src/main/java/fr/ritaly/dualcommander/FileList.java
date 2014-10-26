@@ -19,6 +19,8 @@ package fr.ritaly.dualcommander;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
@@ -42,7 +44,7 @@ import org.apache.commons.lang.Validate;
 import fr.ritaly.dualcommander.event.ChangeEventSource;
 import fr.ritaly.dualcommander.event.ChangeEventSupport;
 
-public class FileList extends JPanel implements ListSelectionListener, ChangeEventSource {
+public class FileList extends JPanel implements ListSelectionListener, ChangeEventSource, KeyListener {
 
 	private static final class FileRenderer extends DefaultListCellRenderer {
 
@@ -94,6 +96,14 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 		}
 	}
 
+	private static String getCanonicalPath(File file) {
+		try {
+			return file.getCanonicalPath();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	private static final long serialVersionUID = 411590029543053088L;
 
 	private File directory;
@@ -106,7 +116,7 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 
 	private final ChangeEventSupport eventSupport = new ChangeEventSupport();
 
-	public FileList(File directory) throws IOException {
+	public FileList(File directory) {
 		Validate.notNull(directory, "The given directory is null");
 		Validate.isTrue(directory.exists(), String.format("The given directory '%s' doesn't exist", directory.getAbsolutePath()));
 		Validate.isTrue(directory.isDirectory(), String.format("The given path '%s' doesn't denote a directory", directory.getAbsolutePath()));
@@ -114,7 +124,7 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 		this.directory = directory;
 
 		// Display the (normalized) canonical path
-		directoryLabel.setText(directory.getCanonicalPath());
+		directoryLabel.setText(getCanonicalPath(directory));
 		directoryLabel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.GRAY), BorderFactory.createEmptyBorder(2, 2, 2, 2)));
 
 		// Layout, columns & rows
@@ -133,6 +143,7 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 		this.list = new JList<>(listModel);
 		this.list.setCellRenderer(new FileRenderer());
 		this.list.addListSelectionListener(this);
+		this.list.addKeyListener(this);
 
 		add(directoryLabel, "grow, span");
 		add(new JScrollPane(list), "grow");
@@ -141,6 +152,27 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 	public File getDirectory() {
 		// TODO Add method setDirectory(File)
 		return directory;
+	}
+
+	public void setDirectory(File directory) {
+		Validate.notNull(directory, "The given directory is null");
+		Validate.isTrue(directory.exists(), String.format("The given directory '%s' doesn't exist", directory.getAbsolutePath()));
+		Validate.isTrue(directory.isDirectory(), String.format("The given path '%s' doesn't denote a directory", directory.getAbsolutePath()));
+
+		this.directory = directory;
+
+		// Refresh the UI
+		directoryLabel.setText(getCanonicalPath(directory));
+
+		this.listModel.clear();
+
+		// Populate the list with the directory's entries
+		for (File file : directory.listFiles()) {
+			if (!file.isHidden()) {
+				// TODO Define an option to list hidden entries
+				listModel.add(file);
+			}
+		}
 	}
 
 	@Override
@@ -163,5 +195,41 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 
 	public List<File> getSelection() {
 		return this.list.getSelectedValuesList();
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if (e.getSource() != list) {
+			return;
+		}
+
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+			// What's the current selection ?
+			final List<File> selection = getSelection();
+
+			if (selection.size() == 1) {
+				final File selectedFile = selection.iterator().next();
+
+				if (selectedFile.isDirectory()) {
+					// Change to the selected directory
+					setDirectory(selectedFile);
+				}
+			}
+		} else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+			// Return to the parent directory (if any)
+			final File parentDir = getDirectory().getParentFile();
+
+			if (parentDir.exists()) {
+				setDirectory(parentDir);
+			}
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
 	}
 }

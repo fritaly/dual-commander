@@ -18,8 +18,6 @@ package fr.ritaly.dualcommander;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -158,7 +156,7 @@ public class DualCommander extends JFrame implements ChangeListener {
 
 	private final FileList leftPanel, rightPanel;
 
-	public DualCommander() throws IOException {
+	public DualCommander() {
 		// TODO Generate a fat jar at build time
 		// TODO Insert version number in frame's title & build id
 		super("Dual Commander");
@@ -234,11 +232,7 @@ public class DualCommander extends JFrame implements ChangeListener {
 
 			@Override
 			public void run() {
-				try {
-					new DualCommander().setVisible(true);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				new DualCommander().setVisible(true);
 			}
 		});
 	}
