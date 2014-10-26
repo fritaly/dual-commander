@@ -26,11 +26,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
-import org.apache.commons.lang.StringUtils;
-
 import net.miginfocom.swing.MigLayout;
 
-import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
+import org.apache.commons.lang.StringUtils;
+
+import com.jgoodies.looks.windows.WindowsLookAndFeel;
 
 public class DualCommander extends JFrame {
 
@@ -74,7 +74,7 @@ public class DualCommander extends JFrame {
 
 	private final class MoveAction extends AbstractAction {
 		public MoveAction() {
-			super("F6 MOve");
+			super("F6 Move");
 		}
 
 		@Override
