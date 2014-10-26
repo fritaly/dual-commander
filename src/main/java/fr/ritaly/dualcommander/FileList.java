@@ -46,6 +46,10 @@ import fr.ritaly.dualcommander.event.ChangeEventSupport;
 
 public class FileList extends JPanel implements ListSelectionListener, ChangeEventSource, KeyListener {
 
+	private static final Color EVEN_ROW = Color.WHITE;
+
+	private static final Color ODD_ROW = Color.decode("#DDDDFF");
+
 	private final class FileRenderer extends DefaultListCellRenderer {
 
 		private static final long serialVersionUID = -8630518399718717693L;
@@ -73,6 +77,8 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 			} else {
 				component.setText(file.getName());
 			}
+
+			setBackground((index % 2 == 0) ? EVEN_ROW : ODD_ROW);
 
 			return component;
 		}
