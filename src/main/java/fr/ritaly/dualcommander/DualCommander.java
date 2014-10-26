@@ -17,14 +17,13 @@
 package fr.ritaly.dualcommander;
 
 import java.awt.event.ActionEvent;
+import java.io.File;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
@@ -167,11 +166,9 @@ public class DualCommander extends JFrame {
 		// Layout, columns & rows
 		setLayout(new MigLayout("insets 5px", "[grow][grow]", "[grow][]"));
 
-		final JList<Object> leftList = new JList<>();
-		final JList<Object> rightList = new JList<>();
-
-		getContentPane().add(new JScrollPane(leftList), "grow");
-		getContentPane().add(new JScrollPane(rightList), "grow, wrap");
+		// TODO Retrieve the previous directory displayed
+		getContentPane().add(new FileList(new File(".")), "grow");
+		getContentPane().add(new FileList(new File(".")), "grow, wrap");
 
 		// The 7 buttons must all have the same width (they must belong to the
 		// same size group)
