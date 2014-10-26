@@ -88,6 +88,8 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 				setForeground(Color.BLACK);
 			}
 
+			setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+
 			return component;
 		}
 	}
@@ -164,6 +166,7 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 		this.listModel = new SortedListModel<File>(new FileComparator());
 
 		this.list = new JList<>(listModel);
+		this.list.setBackground(Utils.getDefaultBackgroundColor());
 		this.list.setCellRenderer(new FileRenderer());
 		this.list.addListSelectionListener(this);
 		this.list.addKeyListener(this);
