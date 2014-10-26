@@ -18,6 +18,7 @@ package fr.ritaly.dualcommander;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.util.List;
 
@@ -42,7 +43,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.jgoodies.looks.windows.WindowsLookAndFeel;
 
-public class DualCommander extends JFrame implements ChangeListener {
+public class DualCommander extends JFrame implements ChangeListener, KeyListener {
 
 	private static final long serialVersionUID = 5445919782222373150L;
 
@@ -175,17 +176,19 @@ public class DualCommander extends JFrame implements ChangeListener {
 		}
 
 		// Layout, columns & rows
-		setLayout(new MigLayout("insets 5px", "[grow][grow]", "[grow][]"));
+		setLayout(new MigLayout("insets 0px", "[grow]0px[grow]", "[grow][]"));
 
 		// TODO Retrieve the previous directory displayed
 		final FileList leftList = new FileList(new File("."));
 		leftList.addChangeListener(this);
+		leftList.addKeyListener(this);
 
 		this.leftTabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		this.leftTabbedPane.addTab(leftList.getDirectory().getName(), leftList);
 
 		final FileList rightList = new FileList(new File("."));
 		rightList.addChangeListener(this);
+		rightList.addKeyListener(this);
 
 		this.rightTabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		this.rightTabbedPane.addTab(rightList.getDirectory().getName(), rightList);
@@ -272,6 +275,38 @@ public class DualCommander extends JFrame implements ChangeListener {
 			// Update the tab's title
 			this.rightTabbedPane.setTitleAt(this.rightTabbedPane.getSelectedIndex(), getRightPanel().getDirectory().getName());
 		}
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		final boolean metaDown = (e.getModifiersEx() | KeyEvent.META_DOWN_MASK) == KeyEvent.META_DOWN_MASK;
+
+		if (e.getSource() == getLeftPanel()) {
+			if ((e.getKeyCode() == KeyEvent.VK_T) && metaDown) {
+				// TODO Factor out this logic in a TabbedPane class
+				final FileList newPanel = new FileList(getLeftPanel().getDirectory());
+				newPanel.addChangeListener(this);
+				newPanel.addKeyListener(this);
+
+				leftTabbedPane.addTab(newPanel.getDirectory().getName(), newPanel);
+			}
+		} else if (e.getSource() == getRightPanel()) {
+			if ((e.getKeyCode() == KeyEvent.VK_T) && metaDown) {
+				final FileList newPanel = new FileList(getRightPanel().getDirectory());
+				newPanel.addChangeListener(this);
+				newPanel.addKeyListener(this);
+
+				rightTabbedPane.addTab(newPanel.getDirectory().getName(), newPanel);
+			}
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
 	}
 
 	public static void main(String[] args) {

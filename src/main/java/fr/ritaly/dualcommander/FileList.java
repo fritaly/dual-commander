@@ -279,15 +279,33 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 			if ((parentDir != null) && parentDir.exists()) {
 				setDirectory(parentDir);
 			}
+		} else {
+			// Propagate event to our listeners
+			processKeyEvent(new KeyEvent(this, e.getID(), e.getWhen(), e.getModifiers(), e.getKeyCode(), e.getKeyChar(),
+					e.getKeyLocation()));
 		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
+		if (e.getSource() != list) {
+			return;
+		}
+
+		// Propagate event to our listeners
+		processKeyEvent(new KeyEvent(this, e.getID(), e.getWhen(), e.getModifiers(), e.getKeyCode(), e.getKeyChar(),
+				e.getKeyLocation()));
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
+		if (e.getSource() != list) {
+			return;
+		}
+
+		// Propagate event to our listeners
+		processKeyEvent(new KeyEvent(this, e.getID(), e.getWhen(), e.getModifiers(), e.getKeyCode(), e.getKeyChar(),
+				e.getKeyLocation()));
 	}
 
 	@Override
