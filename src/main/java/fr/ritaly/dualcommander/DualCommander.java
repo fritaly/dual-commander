@@ -283,20 +283,44 @@ public class DualCommander extends JFrame implements ChangeListener, KeyListener
 
 		if (e.getSource() == getLeftPanel()) {
 			if ((e.getKeyCode() == KeyEvent.VK_T) && metaDown) {
+				// Create a new tab
 				// TODO Factor out this logic in a TabbedPane class
 				final FileList newPanel = new FileList(getLeftPanel().getDirectory());
 				newPanel.addChangeListener(this);
 				newPanel.addKeyListener(this);
 
 				leftTabbedPane.addTab(newPanel.getDirectory().getName(), newPanel);
+			} else if ((e.getKeyCode() == KeyEvent.VK_W) && metaDown) {
+				// Close the current tab (only if not the last one)
+				if (leftTabbedPane.getTabCount() == 1) {
+					return;
+				}
+
+				final FileList panel = getLeftPanel();
+				panel.removeChangeListener(this);
+				panel.removeKeyListener(this);
+
+				leftTabbedPane.removeTabAt(leftTabbedPane.getSelectedIndex());
 			}
 		} else if (e.getSource() == getRightPanel()) {
 			if ((e.getKeyCode() == KeyEvent.VK_T) && metaDown) {
+				// Create a new tab
 				final FileList newPanel = new FileList(getRightPanel().getDirectory());
 				newPanel.addChangeListener(this);
 				newPanel.addKeyListener(this);
 
 				rightTabbedPane.addTab(newPanel.getDirectory().getName(), newPanel);
+			} else if ((e.getKeyCode() == KeyEvent.VK_W) && metaDown) {
+				// Close the current tab (only if not the last one)
+				if (rightTabbedPane.getTabCount() == 1) {
+					return;
+				}
+
+				final FileList panel = getRightPanel();
+				panel.removeChangeListener(this);
+				panel.removeKeyListener(this);
+
+				rightTabbedPane.removeTabAt(rightTabbedPane.getSelectedIndex());
 			}
 		}
 	}
