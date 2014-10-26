@@ -20,4 +20,5 @@ jar {
 
 dependencies {
   compile 'com.jgoodies:jgoodies-looks:2.5.3'
+  compile 'com.miglayout:miglayout:3.7.4'
 }

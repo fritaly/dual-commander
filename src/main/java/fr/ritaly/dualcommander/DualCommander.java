@@ -19,6 +19,8 @@ package fr.ritaly.dualcommander;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
+import net.miginfocom.swing.MigLayout;
+
 import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
 
 public class DualCommander extends JFrame {
@@ -26,8 +28,12 @@ public class DualCommander extends JFrame {
 	private static final long serialVersionUID = 5445919782222373150L;
 
 	public DualCommander() {
+		// TODO Generate a fat jar at build time
 		// TODO Insert version number in frame's title & build id
 		super("Dual Commander");
+
+		// Layout, columns & rows
+		setLayout(new MigLayout("debug", "", ""));
 
 		try {
 			// Apply the JGoodies L&F
