@@ -19,6 +19,8 @@ package fr.ritaly.dualcommander;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -199,10 +201,31 @@ public class DualCommander extends JFrame implements ChangeListener {
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 	}
 
+	private void refreshButtons(List<File> selection) {
+		final int size = selection.size();
+
+		// Only enabled if only one entry selected
+		this.viewButton.setEnabled(size == 1);
+		this.editButton.setEnabled(size == 1);
+
+		// Only enabled if selection isn't empty
+		this.copyButton.setEnabled(size > 0);
+		this.moveButton.setEnabled(size > 0);
+		this.deleteButton.setEnabled(false);
+
+		// Always enabled
+		this.mkdirButton.setEnabled(true);
+		this.quitButton.setEnabled(true);
+	}
+
 	@Override
 	public void stateChanged(ChangeEvent e) {
 		if (e.getSource() == leftPanel) {
+			// Update the buttons based on the current selection
+			refreshButtons(leftPanel.getSelection());
 		} else if (e.getSource() == rightPanel) {
+			// Update the buttons based on the current selection
+			refreshButtons(rightPanel.getSelection());
 		}
 	}
 
