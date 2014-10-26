@@ -29,12 +29,19 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
 
 import org.apache.commons.lang.Validate;
 
-public class FileList extends JPanel {
+import fr.ritaly.dualcommander.event.ChangeEventSource;
+import fr.ritaly.dualcommander.event.ChangeEventSupport;
+
+public class FileList extends JPanel implements ListSelectionListener, ChangeEventSource {
 
 	private static final class FileRenderer extends DefaultListCellRenderer {
 
@@ -96,6 +103,8 @@ public class FileList extends JPanel {
 
 	private final JLabel directoryLabel = new JLabel();
 
+	private final ChangeEventSupport eventSupport = new ChangeEventSupport();
+
 	public FileList(File directory) throws IOException {
 		Validate.notNull(directory, "The given directory is null");
 		Validate.isTrue(directory.exists(), String.format("The given directory '%s' doesn't exist", directory.getAbsolutePath()));
@@ -122,6 +131,7 @@ public class FileList extends JPanel {
 
 		this.list = new JList<>(listModel);
 		this.list.setCellRenderer(new FileRenderer());
+		this.list.addListSelectionListener(this);
 
 		add(directoryLabel, "grow, span");
 		add(new JScrollPane(list), "grow");
@@ -130,5 +140,23 @@ public class FileList extends JPanel {
 	public File getDirectory() {
 		// TODO Add method setDirectory(File)
 		return directory;
+	}
+
+	@Override
+	public void addChangeListener(ChangeListener listener) {
+		this.eventSupport.addChangeListener(listener);
+	}
+
+	@Override
+	public void removeChangeListener(ChangeListener listener) {
+		this.eventSupport.removeChangeListener(listener);
+	}
+
+	@Override
+	public void valueChanged(ListSelectionEvent e) {
+		if (e.getSource() == list) {
+			// Propagate the event
+			this.eventSupport.fireEvent(new ChangeEvent(this));
+		}
 	}
 }
