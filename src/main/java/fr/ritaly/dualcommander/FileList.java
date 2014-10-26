@@ -176,8 +176,7 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 	}
 
 	public File getDirectory() {
-		// TODO Add method setDirectory(File)
-		return directory;
+		return getCanonicalFile(directory);
 	}
 
 	private File getParentDirectory() {

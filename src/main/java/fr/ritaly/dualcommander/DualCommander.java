@@ -25,6 +25,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
@@ -154,7 +155,7 @@ public class DualCommander extends JFrame implements ChangeListener {
 
 	private final JButton quitButton = new JButton(new QuitAction());
 
-	private final FileList leftPanel, rightPanel;
+	private final JTabbedPane leftTabbedPane, rightTabbedPane;
 
 	public DualCommander() {
 		// TODO Generate a fat jar at build time
@@ -172,16 +173,22 @@ public class DualCommander extends JFrame implements ChangeListener {
 		setLayout(new MigLayout("insets 5px", "[grow][grow]", "[grow][]"));
 
 		// TODO Retrieve the previous directory displayed
-		this.leftPanel = new FileList(new File("."));
-		this.leftPanel.addChangeListener(this);
+		final FileList leftList = new FileList(new File("."));
+		leftList.addChangeListener(this);
 
-		this.rightPanel = new FileList(new File("."));
-		this.rightPanel.addChangeListener(this);
+		this.leftTabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		this.leftTabbedPane.addTab(leftList.getDirectory().getName(), leftList);
+
+		final FileList rightList = new FileList(new File("."));
+		rightList.addChangeListener(this);
+
+		this.rightTabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		this.rightTabbedPane.addTab(rightList.getDirectory().getName(), rightList);
 
 		// Adding the 2 components to the same sizegroup ensures they always
 		// keep the same width
-		getContentPane().add(leftPanel, "grow, sizegroup g1");
-		getContentPane().add(rightPanel, "grow, sizegroup g1, wrap");
+		getContentPane().add(leftTabbedPane, "grow, sizegroup g1");
+		getContentPane().add(rightTabbedPane, "grow, sizegroup g1, wrap");
 
 		// The 7 buttons must all have the same width (they must belong to the
 		// same size group)
@@ -218,14 +225,28 @@ public class DualCommander extends JFrame implements ChangeListener {
 		this.quitButton.setEnabled(true);
 	}
 
+	private FileList getLeftPanel() {
+		return (FileList) this.leftTabbedPane.getSelectedComponent();
+	}
+
+	private FileList getRightPanel() {
+		return (FileList) this.rightTabbedPane.getSelectedComponent();
+	}
+
 	@Override
 	public void stateChanged(ChangeEvent e) {
-		if (e.getSource() == leftPanel) {
+		if (e.getSource() == getLeftPanel()) {
 			// Update the buttons based on the current selection
-			refreshButtons(leftPanel.getSelection());
-		} else if (e.getSource() == rightPanel) {
+			refreshButtons(getLeftPanel().getSelection());
+
+			// Update the tab's title
+			this.leftTabbedPane.setTitleAt(this.leftTabbedPane.getSelectedIndex(), getLeftPanel().getDirectory().getName());
+		} else if (e.getSource() == getRightPanel()) {
 			// Update the buttons based on the current selection
-			refreshButtons(rightPanel.getSelection());
+			refreshButtons(getRightPanel().getSelection());
+
+			// Update the tab's title
+			this.rightTabbedPane.setTitleAt(this.rightTabbedPane.getSelectedIndex(), getRightPanel().getDirectory().getName());
 		}
 	}
 
