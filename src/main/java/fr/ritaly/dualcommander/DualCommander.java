@@ -39,6 +39,9 @@ public class DualCommander extends JFrame {
 
 	// TODO Add icons for each action
 	private final class ViewAction extends AbstractAction {
+
+		private static final long serialVersionUID = -3885021368508066211L;
+
 		public ViewAction() {
 			super("F3 View");
 		}
@@ -50,6 +53,9 @@ public class DualCommander extends JFrame {
 	}
 
 	private final class EditAction extends AbstractAction {
+
+		private static final long serialVersionUID = -4570243231693650751L;
+
 		public EditAction() {
 			super("F4 Edit");
 		}
@@ -61,6 +67,9 @@ public class DualCommander extends JFrame {
 	}
 
 	private final class CopyAction extends AbstractAction {
+
+		private static final long serialVersionUID = -4681732083985135686L;
+
 		public CopyAction() {
 			super("F5 Copy");
 		}
@@ -72,6 +81,9 @@ public class DualCommander extends JFrame {
 	}
 
 	private final class MoveAction extends AbstractAction {
+
+		private static final long serialVersionUID = -3452333607164390841L;
+
 		public MoveAction() {
 			super("F6 Move");
 		}
@@ -83,6 +95,9 @@ public class DualCommander extends JFrame {
 	}
 
 	private final class MkdirAction extends AbstractAction {
+
+		private static final long serialVersionUID = -6354029847164675819L;
+
 		public MkdirAction() {
 			super("F7 Mkdir");
 		}
@@ -94,6 +109,9 @@ public class DualCommander extends JFrame {
 	}
 
 	private final class DeleteAction extends AbstractAction {
+
+		private static final long serialVersionUID = -4059922323563836824L;
+
 		public DeleteAction() {
 			super("F8 Delete");
 		}
@@ -105,6 +123,9 @@ public class DualCommander extends JFrame {
 	}
 
 	private final class QuitAction extends AbstractAction {
+
+		private static final long serialVersionUID = 388422465301643805L;
+
 		public QuitAction() {
 			super("Alt+F4 Quit");
 		}
