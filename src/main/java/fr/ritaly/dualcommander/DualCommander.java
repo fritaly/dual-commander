@@ -16,12 +16,15 @@
  */
 package fr.ritaly.dualcommander;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 import net.miginfocom.swing.MigLayout;
 
-import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
+import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 
 public class DualCommander extends JFrame {
 
@@ -32,15 +35,29 @@ public class DualCommander extends JFrame {
 		// TODO Insert version number in frame's title & build id
 		super("Dual Commander");
 
-		// Layout, columns & rows
-		setLayout(new MigLayout("debug", "", ""));
-
 		try {
 			// Apply the JGoodies L&F
-			UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
+			UIManager.setLookAndFeel(new WindowsLookAndFeel());
 		} catch (Exception e) {
 			// Not supposed to happen
 		}
+
+		// Layout, columns & rows
+		setLayout(new MigLayout("insets 5px", "[grow][grow]", "[grow][]"));
+
+		getContentPane().add(new JList<>(), "grow");
+		getContentPane().add(new JList<>(), "grow, wrap");
+
+		final JPanel buttonPanel = new JPanel(new MigLayout("insets 0px", "[grow, sizegroup g1][grow, sizegroup g1][grow, sizegroup g1][grow, sizegroup g1][grow, sizegroup g1][grow, sizegroup g1][grow, sizegroup g1]", "[grow]"));
+		buttonPanel.add(new JButton("F3 View"), "grow");
+		buttonPanel.add(new JButton("F4 Edit"), "grow");
+		buttonPanel.add(new JButton("F5 Copy"), "grow");
+		buttonPanel.add(new JButton("F6 Move"), "grow");
+		buttonPanel.add(new JButton("F7 Mkdir"), "grow");
+		buttonPanel.add(new JButton("F8 Delete"), "grow");
+		buttonPanel.add(new JButton("Alt+F4 Quit"), "grow");
+
+		getContentPane().add(buttonPanel, "grow, span 2");
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
