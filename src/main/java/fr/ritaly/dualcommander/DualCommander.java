@@ -22,6 +22,8 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
+import org.apache.commons.lang.StringUtils;
+
 import net.miginfocom.swing.MigLayout;
 
 import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
@@ -29,6 +31,8 @@ import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 public class DualCommander extends JFrame {
 
 	private static final long serialVersionUID = 5445919782222373150L;
+
+	private final JButton viewButton, editButton, copyButton, moveButton, mkdirButton, deleteButton, quitButton;
 
 	public DualCommander() {
 		// TODO Generate a fat jar at build time
@@ -48,14 +52,24 @@ public class DualCommander extends JFrame {
 		getContentPane().add(new JList<>(), "grow");
 		getContentPane().add(new JList<>(), "grow, wrap");
 
-		final JPanel buttonPanel = new JPanel(new MigLayout("insets 0px", "[grow, sizegroup g1][grow, sizegroup g1][grow, sizegroup g1][grow, sizegroup g1][grow, sizegroup g1][grow, sizegroup g1][grow, sizegroup g1]", "[grow]"));
-		buttonPanel.add(new JButton("F3 View"), "grow");
-		buttonPanel.add(new JButton("F4 Edit"), "grow");
-		buttonPanel.add(new JButton("F5 Copy"), "grow");
-		buttonPanel.add(new JButton("F6 Move"), "grow");
-		buttonPanel.add(new JButton("F7 Mkdir"), "grow");
-		buttonPanel.add(new JButton("F8 Delete"), "grow");
-		buttonPanel.add(new JButton("Alt+F4 Quit"), "grow");
+		this.viewButton = new JButton("F3 View");
+		this.editButton = new JButton("F4 Edit");
+		this.copyButton = new JButton("F5 Copy");
+		this.moveButton = new JButton("F6 Move");
+		this.mkdirButton = new JButton("F7 Mkdir");
+		this.deleteButton = new JButton("F8 Delete");
+		this.quitButton = new JButton("Alt+F4 Quit");
+
+		// The 7 buttons must all have the same width (they must belong to the
+		// same size group)
+		final JPanel buttonPanel = new JPanel(new MigLayout("insets 0px", StringUtils.repeat("[grow, sizegroup g1]", 7), "[grow]"));
+		buttonPanel.add(viewButton, "grow");
+		buttonPanel.add(editButton, "grow");
+		buttonPanel.add(copyButton, "grow");
+		buttonPanel.add(moveButton, "grow");
+		buttonPanel.add(mkdirButton, "grow");
+		buttonPanel.add(deleteButton, "grow");
+		buttonPanel.add(quitButton, "grow");
 
 		getContentPane().add(buttonPanel, "grow, span 2");
 
