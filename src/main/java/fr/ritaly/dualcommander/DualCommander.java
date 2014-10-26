@@ -301,6 +301,12 @@ public class DualCommander extends JFrame implements ChangeListener, KeyListener
 				panel.removeKeyListener(this);
 
 				leftTabbedPane.removeTabAt(leftTabbedPane.getSelectedIndex());
+			} else if ((e.getKeyCode() >= KeyEvent.VK_1) && (e.getKeyCode() <= KeyEvent.VK_9) && metaDown) {
+				final int index = e.getKeyCode() - KeyEvent.VK_1;
+
+				if (index <= leftTabbedPane.getTabCount() - 1) {
+					leftTabbedPane.setSelectedIndex(index);
+				}
 			}
 		} else if (e.getSource() == getRightPanel()) {
 			if ((e.getKeyCode() == KeyEvent.VK_T) && metaDown) {
@@ -321,6 +327,12 @@ public class DualCommander extends JFrame implements ChangeListener, KeyListener
 				panel.removeKeyListener(this);
 
 				rightTabbedPane.removeTabAt(rightTabbedPane.getSelectedIndex());
+			} else if ((e.getKeyCode() >= KeyEvent.VK_1) && (e.getKeyCode() <= KeyEvent.VK_9) && metaDown) {
+				final int index = e.getKeyCode() - KeyEvent.VK_1;
+
+				if (index <= rightTabbedPane.getTabCount() - 1) {
+					rightTabbedPane.setSelectedIndex(index);
+				}
 			}
 		}
 	}
