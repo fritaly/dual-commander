@@ -21,6 +21,8 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
@@ -44,7 +46,7 @@ import org.apache.commons.lang.Validate;
 import fr.ritaly.dualcommander.event.ChangeEventSource;
 import fr.ritaly.dualcommander.event.ChangeEventSupport;
 
-public class FileList extends JPanel implements ListSelectionListener, ChangeEventSource, KeyListener {
+public class FileList extends JPanel implements ListSelectionListener, ChangeEventSource, KeyListener, MouseListener {
 
 	private static final Color EVEN_ROW = Color.WHITE;
 
@@ -165,6 +167,7 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 		this.list.setCellRenderer(new FileRenderer());
 		this.list.addListSelectionListener(this);
 		this.list.addKeyListener(this);
+		this.list.addMouseListener(this);
 
 		this.directoryLabel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.GRAY), BorderFactory.createEmptyBorder(2, 2, 2, 2)));
 
@@ -274,5 +277,40 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 
 	@Override
 	public void keyTyped(KeyEvent e) {
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if (e.getSource() == this.list) {
+			if (e.getClickCount() == 2) {
+				// Only react to double clicks
+				final List<File> selection = getSelection();
+
+				if (selection.size() == 1) {
+					final File file = selection.iterator().next();
+
+					if (file.isDirectory()) {
+						// Change to the clicked directory
+						setDirectory(file);
+					}
+				}
+			}
+		}
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
 	}
 }
