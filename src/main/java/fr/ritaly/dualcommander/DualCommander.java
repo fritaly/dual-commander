@@ -24,6 +24,7 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
@@ -166,8 +167,11 @@ public class DualCommander extends JFrame {
 		// Layout, columns & rows
 		setLayout(new MigLayout("insets 5px", "[grow][grow]", "[grow][]"));
 
-		getContentPane().add(new JList<>(), "grow");
-		getContentPane().add(new JList<>(), "grow, wrap");
+		final JList<Object> leftList = new JList<>();
+		final JList<Object> rightList = new JList<>();
+
+		getContentPane().add(new JScrollPane(leftList), "grow");
+		getContentPane().add(new JScrollPane(rightList), "grow, wrap");
 
 		// The 7 buttons must all have the same width (they must belong to the
 		// same size group)
