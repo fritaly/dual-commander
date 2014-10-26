@@ -178,8 +178,10 @@ public class DualCommander extends JFrame implements ChangeListener {
 		this.rightPanel = new FileList(new File("."));
 		this.rightPanel.addChangeListener(this);
 
-		getContentPane().add(leftPanel, "grow");
-		getContentPane().add(rightPanel, "grow, wrap");
+		// Adding the 2 components to the same sizegroup ensures they always
+		// keep the same width
+		getContentPane().add(leftPanel, "grow, sizegroup g1");
+		getContentPane().add(rightPanel, "grow, sizegroup g1, wrap");
 
 		// The 7 buttons must all have the same width (they must belong to the
 		// same size group)
