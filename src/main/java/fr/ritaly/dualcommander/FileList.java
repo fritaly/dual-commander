@@ -17,22 +17,50 @@
 package fr.ritaly.dualcommander;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.BevelBorder;
 
 import net.miginfocom.swing.MigLayout;
 
 import org.apache.commons.lang.Validate;
 
 public class FileList extends JPanel {
+
+	private static final class FileRenderer extends DefaultListCellRenderer {
+
+		private static final long serialVersionUID = -8630518399718717693L;
+
+		@Override
+		public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+				boolean cellHasFocus) {
+
+			final JLabel component = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+			final File file = (File) value;
+
+			if (file.isDirectory()) {
+				// Render the directories with a bold font
+				final Font font = component.getFont();
+
+				component.setFont(new Font(font.getName(), Font.BOLD, component.getFont().getSize()));
+				component.setText(String.format("[%s]", file.getName()));
+			} else {
+				component.setText(file.getName());
+			}
+
+			return component;
+		}
+	}
 
 	private static final long serialVersionUID = 411590029543053088L;
 
@@ -69,6 +97,7 @@ public class FileList extends JPanel {
 		}
 
 		this.list = new JList<>(listModel);
+		this.list.setCellRenderer(new FileRenderer());
 
 		add(directoryLabel, "grow, span");
 		add(new JScrollPane(list), "grow");
