@@ -17,3 +17,7 @@ jar {
     attributes += [ 'Main-Class': 'fr.ritaly.dualcommander.DualCommander' ]
   }
 }
+
+dependencies {
+  compile 'com.jgoodies:jgoodies-looks:2.5.3'
+}

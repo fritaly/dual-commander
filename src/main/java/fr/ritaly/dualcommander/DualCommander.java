@@ -17,6 +17,9 @@
 package fr.ritaly.dualcommander;
 
 import javax.swing.JFrame;
+import javax.swing.UIManager;
+
+import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
 
 public class DualCommander extends JFrame {
 
@@ -25,6 +28,13 @@ public class DualCommander extends JFrame {
 	public DualCommander() {
 		// TODO Insert version number in frame's title & build id
 		super("Dual Commander");
+
+		try {
+			// Apply the JGoodies L&F
+			UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
+		} catch (Exception e) {
+			// Not supposed to happen
+		}
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
