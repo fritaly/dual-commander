@@ -16,12 +16,16 @@
  */
 package fr.ritaly.dualcommander;
 
+import java.awt.Color;
 import java.io.File;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.border.BevelBorder;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -37,6 +41,8 @@ public class FileList extends JPanel {
 
 	private final JList<File> list;
 
+	private final JLabel directoryLabel = new JLabel();
+
 	public FileList(File directory) {
 		Validate.notNull(directory, "The given directory is null");
 		Validate.isTrue(directory.exists(), String.format("The given directory '%s' doesn't exist", directory.getAbsolutePath()));
@@ -44,8 +50,11 @@ public class FileList extends JPanel {
 
 		this.directory = directory;
 
+		directoryLabel.setText(directory.getAbsolutePath());
+		directoryLabel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.GRAY), BorderFactory.createEmptyBorder(2, 2, 2, 2)));
+
 		// Layout, columns & rows
-		setLayout(new MigLayout("insets 0px", "[grow]", "[grow]"));
+		setLayout(new MigLayout("insets 0px", "[grow]", "[][grow]"));
 
 		this.listModel = new DefaultListModel<>();
 
@@ -59,6 +68,7 @@ public class FileList extends JPanel {
 
 		this.list = new JList<>(listModel);
 
+		add(directoryLabel, "grow, span");
 		add(new JScrollPane(list), "grow");
 	}
 
