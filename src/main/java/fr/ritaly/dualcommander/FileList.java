@@ -21,10 +21,10 @@ import java.awt.Component;
 import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
+import java.util.Comparator;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
-import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -62,11 +62,35 @@ public class FileList extends JPanel {
 		}
 	}
 
+	private static final class FileComparator implements Comparator<File> {
+		@Override
+		public int compare(File f1, File f2) {
+			// Directories come first
+			if (f1.isDirectory()) {
+				if (f2.isDirectory()) {
+					// Compare the 2 directories by (case-insensive) name
+					return f1.getName().compareToIgnoreCase(f2.getName());
+				} else {
+					// The directories come first
+					return -1;
+				}
+			} else {
+				if (f2.isDirectory()) {
+					// The directories come first
+					return +1;
+				} else {
+					// Compare the 2 files by (case-insensive) name
+					return f1.getName().compareToIgnoreCase(f2.getName());
+				}
+			}
+		}
+	}
+
 	private static final long serialVersionUID = 411590029543053088L;
 
 	private File directory;
 
-	private final DefaultListModel<File> listModel;
+	private final SortedListModel<File> listModel;
 
 	private final JList<File> list;
 
@@ -86,13 +110,13 @@ public class FileList extends JPanel {
 		// Layout, columns & rows
 		setLayout(new MigLayout("insets 0px", "[grow]", "[][grow]"));
 
-		this.listModel = new DefaultListModel<>();
+		this.listModel = new SortedListModel<File>(new FileComparator());
 
 		// Populate the list with the directory's entries
 		for (File file : directory.listFiles()) {
 			if (!file.isHidden()) {
 				// TODO Define an option to list hidden entries
-				listModel.addElement(file);
+				listModel.add(file);
 			}
 		}
 
