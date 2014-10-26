@@ -80,6 +80,12 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 
 			setBackground((index % 2 == 0) ? EVEN_ROW : ODD_ROW);
 
+			if (isSelected) {
+				setForeground(Color.RED);
+			} else {
+				setForeground(Color.BLACK);
+			}
+
 			return component;
 		}
 	}
