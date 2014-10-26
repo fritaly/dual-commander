@@ -222,7 +222,7 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 
 		// Fire an event to ensure listeners are notified of the directory
 		// change
-		eventSupport.fireEvent(new ChangeEvent(this));
+		fireChangeEvent();
 	}
 
 	@Override
@@ -235,11 +235,15 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 		this.eventSupport.removeChangeListener(listener);
 	}
 
+	private void fireChangeEvent() {
+		this.eventSupport.fireEvent(new ChangeEvent(this));
+	}
+
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		if (e.getSource() == list) {
 			// Propagate the event
-			this.eventSupport.fireEvent(new ChangeEvent(this));
+			fireChangeEvent();
 		}
 	}
 
