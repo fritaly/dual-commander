@@ -211,7 +211,7 @@ public class DualCommander extends JFrame implements ChangeListener {
 		// Only enabled if selection isn't empty
 		this.copyButton.setEnabled(size > 0);
 		this.moveButton.setEnabled(size > 0);
-		this.deleteButton.setEnabled(false);
+		this.deleteButton.setEnabled(size > 0);
 
 		// Always enabled
 		this.mkdirButton.setEnabled(true);
