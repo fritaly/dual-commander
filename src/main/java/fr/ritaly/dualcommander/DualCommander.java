@@ -18,6 +18,7 @@ package fr.ritaly.dualcommander;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -151,7 +152,7 @@ public class DualCommander extends JFrame {
 
 	private final JButton quitButton = new JButton(new QuitAction());
 
-	public DualCommander() {
+	public DualCommander() throws IOException {
 		// TODO Generate a fat jar at build time
 		// TODO Insert version number in frame's title & build id
 		super("Dual Commander");
@@ -193,7 +194,11 @@ public class DualCommander extends JFrame {
 
 			@Override
 			public void run() {
-				new DualCommander().setVisible(true);
+				try {
+					new DualCommander().setVisible(true);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 	}

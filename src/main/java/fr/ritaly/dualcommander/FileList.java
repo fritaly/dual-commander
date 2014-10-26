@@ -18,6 +18,7 @@ package fr.ritaly.dualcommander;
 
 import java.awt.Color;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -43,14 +44,15 @@ public class FileList extends JPanel {
 
 	private final JLabel directoryLabel = new JLabel();
 
-	public FileList(File directory) {
+	public FileList(File directory) throws IOException {
 		Validate.notNull(directory, "The given directory is null");
 		Validate.isTrue(directory.exists(), String.format("The given directory '%s' doesn't exist", directory.getAbsolutePath()));
 		Validate.isTrue(directory.isDirectory(), String.format("The given path '%s' doesn't denote a directory", directory.getAbsolutePath()));
 
 		this.directory = directory;
 
-		directoryLabel.setText(directory.getAbsolutePath());
+		// Display the (normalized) canonical path
+		directoryLabel.setText(directory.getCanonicalPath());
 		directoryLabel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.GRAY), BorderFactory.createEmptyBorder(2, 2, 2, 2)));
 
 		// Layout, columns & rows
