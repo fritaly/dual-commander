@@ -214,6 +214,9 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 		if ((parentDir != null) && parentDir.exists()) {
 			listModel.add(parentDir);
 		}
+
+		// Reset the selection when the directory changes
+		list.clearSelection();
 	}
 
 	@Override
