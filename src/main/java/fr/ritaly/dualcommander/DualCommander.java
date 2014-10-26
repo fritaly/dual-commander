@@ -24,6 +24,7 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import net.miginfocom.swing.MigLayout;
@@ -161,7 +162,12 @@ public class DualCommander extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		final DualCommander commander = new DualCommander();
-		commander.setVisible(true);
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run() {
+				new DualCommander().setVisible(true);
+			}
+		});
 	}
 }
