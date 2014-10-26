@@ -16,9 +16,13 @@
  */
 package fr.ritaly.dualcommander;
 
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
@@ -33,6 +37,84 @@ public class DualCommander extends JFrame {
 	private static final long serialVersionUID = 5445919782222373150L;
 
 	private final JButton viewButton, editButton, copyButton, moveButton, mkdirButton, deleteButton, quitButton;
+
+	// TODO Add icons for each action
+	private final class ViewAction extends AbstractAction {
+		public ViewAction() {
+			super("F3 View");
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JOptionPane.showMessageDialog(DualCommander.this, "Not implemented yet", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private final class EditAction extends AbstractAction {
+		public EditAction() {
+			super("F4 Edit");
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JOptionPane.showMessageDialog(DualCommander.this, "Not implemented yet", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private final class CopyAction extends AbstractAction {
+		public CopyAction() {
+			super("F5 Copy");
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JOptionPane.showMessageDialog(DualCommander.this, "Not implemented yet", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private final class MoveAction extends AbstractAction {
+		public MoveAction() {
+			super("F6 MOve");
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JOptionPane.showMessageDialog(DualCommander.this, "Not implemented yet", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private final class MkdirAction extends AbstractAction {
+		public MkdirAction() {
+			super("F7 Mkdir");
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JOptionPane.showMessageDialog(DualCommander.this, "Not implemented yet", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private final class DeleteAction extends AbstractAction {
+		public DeleteAction() {
+			super("F8 Delete");
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JOptionPane.showMessageDialog(DualCommander.this, "Not implemented yet", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private final class QuitAction extends AbstractAction {
+		public QuitAction() {
+			super("Alt+F4 Quit");
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JOptionPane.showMessageDialog(DualCommander.this, "Not implemented yet", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
 
 	public DualCommander() {
 		// TODO Generate a fat jar at build time
@@ -52,13 +134,13 @@ public class DualCommander extends JFrame {
 		getContentPane().add(new JList<>(), "grow");
 		getContentPane().add(new JList<>(), "grow, wrap");
 
-		this.viewButton = new JButton("F3 View");
-		this.editButton = new JButton("F4 Edit");
-		this.copyButton = new JButton("F5 Copy");
-		this.moveButton = new JButton("F6 Move");
-		this.mkdirButton = new JButton("F7 Mkdir");
-		this.deleteButton = new JButton("F8 Delete");
-		this.quitButton = new JButton("Alt+F4 Quit");
+		this.viewButton = new JButton(new ViewAction());
+		this.editButton = new JButton(new EditAction());
+		this.copyButton = new JButton(new CopyAction());
+		this.moveButton = new JButton(new MoveAction());
+		this.mkdirButton = new JButton(new MkdirAction());
+		this.deleteButton = new JButton(new DeleteAction());
+		this.quitButton = new JButton(new QuitAction());
 
 		// The 7 buttons must all have the same width (they must belong to the
 		// same size group)
