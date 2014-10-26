@@ -219,6 +219,10 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 
 		// Reset the selection when the directory changes
 		list.clearSelection();
+
+		// Fire an event to ensure listeners are notified of the directory
+		// change
+		eventSupport.fireEvent(new ChangeEvent(this));
 	}
 
 	@Override
@@ -265,7 +269,7 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 			// Return to the parent directory (if any)
 			final File parentDir = getParentDirectory();
 
-			if (parentDir.exists()) {
+			if ((parentDir != null) && parentDir.exists()) {
 				setDirectory(parentDir);
 			}
 		}
