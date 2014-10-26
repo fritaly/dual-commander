@@ -183,7 +183,7 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 	private File getParentDirectory() {
 		final File parentDir = getCanonicalFile(directory).getParentFile();
 
-		return parentDir.exists() ? parentDir : null;
+		return (parentDir != null) && parentDir.exists() ? parentDir : null;
 	}
 
 	public void setDirectory(File directory) {
