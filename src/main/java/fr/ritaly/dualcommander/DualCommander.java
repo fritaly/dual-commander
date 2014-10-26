@@ -112,7 +112,8 @@ public class DualCommander extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JOptionPane.showMessageDialog(DualCommander.this, "Not implemented yet", "Error", JOptionPane.ERROR_MESSAGE);
+			// TODO Ask a user confirm before exiting
+			DualCommander.this.dispose();
 		}
 	}
 
