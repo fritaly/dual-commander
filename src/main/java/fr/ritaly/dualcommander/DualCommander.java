@@ -27,6 +27,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -34,7 +36,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.jgoodies.looks.windows.WindowsLookAndFeel;
 
-public class DualCommander extends JFrame {
+public class DualCommander extends JFrame implements ChangeListener {
 
 	private static final long serialVersionUID = 5445919782222373150L;
 
@@ -152,6 +154,8 @@ public class DualCommander extends JFrame {
 
 	private final JButton quitButton = new JButton(new QuitAction());
 
+	private final FileList leftPanel, rightPanel;
+
 	public DualCommander() throws IOException {
 		// TODO Generate a fat jar at build time
 		// TODO Insert version number in frame's title & build id
@@ -168,8 +172,14 @@ public class DualCommander extends JFrame {
 		setLayout(new MigLayout("insets 5px", "[grow][grow]", "[grow][]"));
 
 		// TODO Retrieve the previous directory displayed
-		getContentPane().add(new FileList(new File(".")), "grow");
-		getContentPane().add(new FileList(new File(".")), "grow, wrap");
+		this.leftPanel = new FileList(new File("."));
+		this.leftPanel.addChangeListener(this);
+
+		this.rightPanel = new FileList(new File("."));
+		this.rightPanel.addChangeListener(this);
+
+		getContentPane().add(leftPanel, "grow");
+		getContentPane().add(rightPanel, "grow, wrap");
 
 		// The 7 buttons must all have the same width (they must belong to the
 		// same size group)
@@ -187,6 +197,13 @@ public class DualCommander extends JFrame {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
+	}
+
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		if (e.getSource() == leftPanel) {
+		} else if (e.getSource() == rightPanel) {
+		}
 	}
 
 	public static void main(String[] args) {
