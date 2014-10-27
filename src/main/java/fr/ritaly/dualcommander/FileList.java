@@ -53,7 +53,7 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 
 	private static final Color ODD_ROW = Color.decode("#DDDDFF");
 
-	private final class FileRenderer extends DefaultListCellRenderer {
+	private final class FileListCellRenderer extends DefaultListCellRenderer {
 
 		private static final long serialVersionUID = -8630518399718717693L;
 
@@ -136,7 +136,7 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 
 		this.list = new JList<>(listModel);
 		this.list.setBackground(Utils.getDefaultBackgroundColor());
-		this.list.setCellRenderer(new FileRenderer());
+		this.list.setCellRenderer(new FileListCellRenderer());
 		this.list.addListSelectionListener(this);
 		this.list.addKeyListener(this);
 		this.list.addMouseListener(this);
