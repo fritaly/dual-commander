@@ -83,13 +83,13 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 				component.setText(file.getName());
 			}
 
-			setBackground((row % 2 == 0) ? EVEN_ROW : ODD_ROW);
-
 			if (isSelected) {
-				setForeground(Color.RED);
+				setBackground((row % 2 == 0) ? Color.decode("#FFC57A") : Color.decode("#F5AC4C"));
 			} else {
-				setForeground(file.isDirectory() ? Color.BLACK : Color.decode("#555555"));
+				setBackground((row % 2 == 0) ? EVEN_ROW : ODD_ROW);
 			}
+
+			setForeground(file.isDirectory() ? Color.BLACK : Color.decode("#555555"));
 
 			setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
@@ -125,13 +125,13 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 				component.setText(file.getName());
 			}
 
-			setBackground((index % 2 == 0) ? EVEN_ROW : ODD_ROW);
-
 			if (isSelected) {
-				setForeground(Color.RED);
+				setBackground((index % 2 == 0) ? Color.decode("#FFC57A") : Color.decode("#F5AC4C"));
 			} else {
-				setForeground(file.isDirectory() ? Color.BLACK : Color.decode("#555555"));
+				setBackground((index % 2 == 0) ? EVEN_ROW : ODD_ROW);
 			}
+
+			setForeground(file.isDirectory() ? Color.BLACK : Color.decode("#555555"));
 
 			setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
