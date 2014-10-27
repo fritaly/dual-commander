@@ -34,11 +34,13 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -52,6 +54,48 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 	private static final Color EVEN_ROW = Color.WHITE;
 
 	private static final Color ODD_ROW = Color.decode("#DDDDFF");
+
+	private final class FileTableCellRenderer extends DefaultTableCellRenderer {
+
+		private static final long serialVersionUID = -896199602148007012L;
+
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
+				int column) {
+
+			final JLabel component = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+			final File file = (File) value;
+
+			if (file.isDirectory()) {
+				// Render the directories with a bold font
+				final Font font = component.getFont();
+
+				component.setFont(new Font(font.getName(), Font.BOLD, component.getFont().getSize()));
+
+				if (file.equals(getParentDirectory())) {
+					// Render the parent directory entry as ".."
+					component.setText("[..]");
+				} else {
+					component.setText(String.format("[%s]", file.getName()));
+				}
+			} else {
+				component.setText(file.getName());
+			}
+
+			setBackground((row % 2 == 0) ? EVEN_ROW : ODD_ROW);
+
+			if (isSelected) {
+				setForeground(Color.RED);
+			} else {
+				setForeground(Color.BLACK);
+			}
+
+			setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+
+			return component;
+		}
+	}
 
 	private final class FileListCellRenderer extends DefaultListCellRenderer {
 
