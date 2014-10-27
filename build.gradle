@@ -12,13 +12,15 @@ task wrapper(type: Wrapper) {
   gradleVersion = '2.1'
 }
 
+def releaseDate = new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss (Z)').format(new Date())
+
 jar {
   manifest {
     attributes += [ 'Main-Class': 'fr.ritaly.dualcommander.DualCommander' ]
 	attributes += [ 'Artifact-Group': "${project.group}" ]
 	attributes += [ 'Artifact-Name': "${project.name}" ]
 	attributes += [ 'Artifact-Version': "${project.version}" ]
-	attributes += [ 'Built-On': "${new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss (Z)').format(new Date())}" ]
+	attributes += [ 'Built-On': "${releaseDate}" ]
 	attributes += [ 'Built-By': "${System.properties['user.name']}" ]
   }
 }
@@ -27,4 +29,11 @@ dependencies {
   compile 'com.jgoodies:jgoodies-looks:2.5.3'
   compile 'com.miglayout:miglayout:3.7.4'
   compile 'commons-lang:commons-lang:2.6'
+}
+
+processResources {
+  filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+    'VERSION': version.toString(),
+    'RELEASE_DATE': releaseDate.toString()
+  ])
 }
