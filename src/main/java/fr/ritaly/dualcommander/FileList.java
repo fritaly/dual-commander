@@ -48,7 +48,7 @@ import org.apache.commons.lang.Validate;
 import fr.ritaly.dualcommander.event.ChangeEventSource;
 import fr.ritaly.dualcommander.event.ChangeEventSupport;
 
-public class FileList extends JPanel implements ListSelectionListener, ChangeEventSource, KeyListener, MouseListener {
+public class FileList extends JPanel implements ListSelectionListener, ChangeEventSource, KeyListener, MouseListener, HasParentDirectory {
 
 	private static final Color EVEN_ROW = Color.WHITE;
 
@@ -188,7 +188,8 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 		return getCanonicalFile(directory);
 	}
 
-	private File getParentDirectory() {
+	@Override
+	public File getParentDirectory() {
 		final File parentDir = getCanonicalFile(directory).getParentFile();
 
 		return (parentDir != null) && parentDir.exists() ? parentDir : null;
