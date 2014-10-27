@@ -15,6 +15,11 @@ task wrapper(type: Wrapper) {
 jar {
   manifest {
     attributes += [ 'Main-Class': 'fr.ritaly.dualcommander.DualCommander' ]
+	attributes += [ 'Artifact-Group': "${project.group}" ]
+	attributes += [ 'Artifact-Name': "${project.name}" ]
+	attributes += [ 'Artifact-Version': "${project.version}" ]
+	attributes += [ 'Built-On': "${new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss (Z)').format(new Date())}" ]
+	attributes += [ 'Built-By': "${System.properties['user.name']}" ]
   }
 }
 
