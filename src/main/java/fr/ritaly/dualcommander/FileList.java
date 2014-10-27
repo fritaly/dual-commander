@@ -185,6 +185,7 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 		this.list.addKeyListener(this);
 		this.list.addMouseListener(this);
 
+		this.directoryButton.setFocusable(false);
 		this.directoryButton.setHorizontalAlignment(SwingConstants.LEFT);
 
 		add(directoryButton, "grow, span");

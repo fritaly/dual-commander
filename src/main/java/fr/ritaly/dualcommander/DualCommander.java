@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JButton;
@@ -40,6 +41,7 @@ import javax.swing.event.ChangeListener;
 import net.miginfocom.swing.MigLayout;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
 
 import com.jgoodies.looks.windows.WindowsLookAndFeel;
 
@@ -148,19 +150,28 @@ public class DualCommander extends JFrame implements ChangeListener, KeyListener
 		}
 	}
 
-	private final JButton viewButton = new JButton(new ViewAction());
+	private static JButton createButton(Action action) {
+		Validate.notNull(action, "The given action is null");
 
-	private final JButton editButton = new JButton(new EditAction());
+		final JButton button = new JButton(action);
+		button.setFocusable(false);
 
-	private final JButton copyButton = new JButton(new CopyAction());
+		return button;
+	}
 
-	private final JButton moveButton = new JButton(new MoveAction());
+	private final JButton viewButton = createButton(new ViewAction());
 
-	private final JButton mkdirButton = new JButton(new MkdirAction());
+	private final JButton editButton = createButton(new EditAction());
 
-	private final JButton deleteButton = new JButton(new DeleteAction());
+	private final JButton copyButton = createButton(new CopyAction());
 
-	private final JButton quitButton = new JButton(new QuitAction());
+	private final JButton moveButton = createButton(new MoveAction());
+
+	private final JButton mkdirButton = createButton(new MkdirAction());
+
+	private final JButton deleteButton = createButton(new DeleteAction());
+
+	private final JButton quitButton = createButton(new QuitAction());
 
 	// TODO Encapsulate those JTabbedPane into a widget
 	private final JTabbedPane leftTabbedPane, rightTabbedPane;
