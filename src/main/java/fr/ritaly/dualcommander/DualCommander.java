@@ -48,6 +48,7 @@ public class DualCommander extends JFrame implements ChangeListener, KeyListener
 	private static final long serialVersionUID = 5445919782222373150L;
 
 	// TODO Add icons for each action
+	// TODO Implement the actions F3 -> F8
 	private final class ViewAction extends AbstractAction {
 
 		private static final long serialVersionUID = -3885021368508066211L;
@@ -161,6 +162,7 @@ public class DualCommander extends JFrame implements ChangeListener, KeyListener
 
 	private final JButton quitButton = new JButton(new QuitAction());
 
+	// TODO Encapsulate those JTabbedPane into a widget
 	private final JTabbedPane leftTabbedPane, rightTabbedPane;
 
 	public DualCommander() {

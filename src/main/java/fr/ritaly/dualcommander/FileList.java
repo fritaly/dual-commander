@@ -149,8 +149,10 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 
 	private final SortedListModel<File> listModel;
 
+	// TODO Replace the JList by a sortable JTable
 	private final JList<File> list;
 
+	// TODO Replace the JLabel by a clickable button (opening a directory picker)
 	private final JLabel directoryLabel = new JLabel();
 
 	private final ChangeEventSupport eventSupport = new ChangeEventSupport();
