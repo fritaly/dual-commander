@@ -88,7 +88,7 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 			if (isSelected) {
 				setForeground(Color.RED);
 			} else {
-				setForeground(Color.BLACK);
+				setForeground(file.isDirectory() ? Color.BLACK : Color.decode("#555555"));
 			}
 
 			setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
@@ -130,7 +130,7 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 			if (isSelected) {
 				setForeground(Color.RED);
 			} else {
-				setForeground(Color.BLACK);
+				setForeground(file.isDirectory() ? Color.BLACK : Color.decode("#555555"));
 			}
 
 			setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
