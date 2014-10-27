@@ -30,10 +30,12 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
@@ -152,8 +154,7 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 	// TODO Replace the JList by a sortable JTable
 	private final JList<File> list;
 
-	// TODO Replace the JLabel by a clickable button (opening a directory picker)
-	private final JLabel directoryLabel = new JLabel();
+	private final JButton directoryButton = new JButton(Icons.FOLDER_ICON);
 
 	private final ChangeEventSupport eventSupport = new ChangeEventSupport();
 
@@ -174,9 +175,9 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 		this.list.addKeyListener(this);
 		this.list.addMouseListener(this);
 
-		this.directoryLabel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.GRAY), BorderFactory.createEmptyBorder(2, 2, 2, 2)));
+		this.directoryButton.setHorizontalAlignment(SwingConstants.LEFT);
 
-		add(directoryLabel, "grow, span");
+		add(directoryButton, "grow, span");
 		add(new JScrollPane(list), "grow");
 
 		// Set the directory (this will populate the list)
@@ -203,7 +204,7 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 		// Refresh the UI
 
 		// Display the (normalized) canonical path
-		directoryLabel.setText(getCanonicalPath(directory));
+		directoryButton.setText(getCanonicalPath(directory));
 
 		this.listModel.clear();
 
