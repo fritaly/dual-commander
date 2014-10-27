@@ -4,5 +4,9 @@ import javax.swing.ImageIcon;
 
 public final class Icons {
 
-	public static final ImageIcon FOLDER_ICON = new ImageIcon(Icons.class.getResource("/fr/ritaly/dualcommander/icons/folder.png"));
+	private static ImageIcon getIcon(String name) {
+		return new ImageIcon(Icons.class.getResource(String.format("/fr/ritaly/dualcommander/icons/%s", name)));
+	}
+
+	public static final ImageIcon FOLDER_ICON = getIcon("folder.png");
 }
