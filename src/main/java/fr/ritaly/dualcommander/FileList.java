@@ -25,7 +25,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -96,39 +95,6 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 		}
 	}
 
-	private final class FileComparator implements Comparator<File> {
-		@Override
-		public int compare(File f1, File f2) {
-			// Directories come first
-			if (f1.isDirectory()) {
-				if (f1.equals(getParentDirectory())) {
-					// The parent directory always comes first
-					return -1;
-				}
-				if (f2.isDirectory()) {
-					if (f2.equals(getParentDirectory())) {
-						// The parent directory always comes first
-						return -1;
-					}
-
-					// Compare the 2 directories by (case-insensive) name
-					return f1.getName().compareToIgnoreCase(f2.getName());
-				} else {
-					// The directories come first
-					return -1;
-				}
-			} else {
-				if (f2.isDirectory()) {
-					// The directories come first
-					return +1;
-				} else {
-					// Compare the 2 files by (case-insensive) name
-					return f1.getName().compareToIgnoreCase(f2.getName());
-				}
-			}
-		}
-	}
-
 	private static String getCanonicalPath(File file) {
 		try {
 			return file.getCanonicalPath();
@@ -166,7 +132,7 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 		// Layout, columns & rows
 		setLayout(new MigLayout("insets 0px", "[grow]", "[][grow]"));
 
-		this.listModel = new SortedListModel<File>(new FileComparator());
+		this.listModel = new SortedListModel<File>(new FileComparator(this));
 
 		this.list = new JList<>(listModel);
 		this.list.setBackground(Utils.getDefaultBackgroundColor());
