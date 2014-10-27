@@ -211,6 +211,8 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 		Validate.isTrue(directory.exists(), String.format("The given directory '%s' doesn't exist", directory.getAbsolutePath()));
 		Validate.isTrue(directory.isDirectory(), String.format("The given path '%s' doesn't denote a directory", directory.getAbsolutePath()));
 
+		final File oldDir = this.directory;
+
 		this.directory = directory;
 
 		// Refresh the UI
@@ -235,8 +237,15 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 			listModel.add(parentDir);
 		}
 
-		// Reset the selection when the directory changes
-		list.clearSelection();
+		if ((oldDir != null) && listModel.contains(oldDir)) {
+			// Auto-select the directory we just left
+			list.setSelectedValue(oldDir, true);
+		} else {
+			// Auto-select the 1st entry (if there's one)
+			if (listModel.getSize() > 1) {
+				list.setSelectedIndex(1);
+			}
+		}
 
 		// Fire an event to ensure listeners are notified of the directory
 		// change
