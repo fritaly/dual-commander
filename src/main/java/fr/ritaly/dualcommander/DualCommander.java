@@ -178,8 +178,7 @@ public class DualCommander extends JFrame implements ChangeListener, KeyListener
 
 	public DualCommander() {
 		// TODO Generate a fat jar at build time
-		// TODO Insert version number in frame's title & build id
-		super("Dual Commander");
+		super(String.format("Dual Commander %s", Utils.getApplicationVersion()));
 
 		try {
 			// Apply the JGoodies L&F
