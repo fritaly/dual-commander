@@ -178,6 +178,22 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 	private final QuitAction quitAction = new QuitAction();
 
+	// --- Buttons --- //
+
+	private final JButton viewButton = createButton(viewAction);
+
+	private final JButton editButton = createButton(editAction);
+
+	private final JButton copyButton = createButton(copyAction);
+
+	private final JButton moveButton = createButton(moveAction);
+
+	private final JButton mkdirButton = createButton(mkdirAction);
+
+	private final JButton deleteButton = createButton(deleteAction);
+
+	private final JButton quitButton = createButton(quitAction);
+
 	private final TabbedPane leftPane = new TabbedPane();
 
 	private final TabbedPane rightPane = new TabbedPane();
@@ -211,13 +227,13 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		// same size group)
 		final JPanel buttonPanel = new JPanel(
 				new MigLayout("insets 0px", StringUtils.repeat("[grow, sizegroup g1]", 7), "[grow]"));
-		buttonPanel.add(createButton(viewAction), "grow");
-		buttonPanel.add(createButton(editAction), "grow");
-		buttonPanel.add(createButton(copyAction), "grow");
-		buttonPanel.add(createButton(moveAction), "grow");
-		buttonPanel.add(createButton(mkdirAction), "grow");
-		buttonPanel.add(createButton(deleteAction), "grow");
-		buttonPanel.add(createButton(quitAction), "grow");
+		buttonPanel.add(viewButton, "grow");
+		buttonPanel.add(editButton, "grow");
+		buttonPanel.add(copyButton, "grow");
+		buttonPanel.add(moveButton, "grow");
+		buttonPanel.add(mkdirButton, "grow");
+		buttonPanel.add(deleteButton, "grow");
+		buttonPanel.add(quitButton, "grow");
 
 		getContentPane().add(buttonPanel, "grow, span 2");
 
@@ -226,19 +242,19 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		final ActionMap actionMap = this.leftPane.getActionMap();
 
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0, true), "view");
-		actionMap.put("view", viewAction);
+		actionMap.put("view", viewButton.getAction());
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0, true), "edit");
-		actionMap.put("edit", editAction);
+		actionMap.put("edit", editButton.getAction());
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0, true), "copy");
-		actionMap.put("copy", copyAction);
+		actionMap.put("copy", copyButton.getAction());
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0, true), "move");
-		actionMap.put("move", moveAction);
+		actionMap.put("move", moveButton.getAction());
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0, true), "mkdir");
-		actionMap.put("mkdir", mkdirAction);
+		actionMap.put("mkdir", mkdirButton.getAction());
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F8, 0, true), "delete");
-		actionMap.put("delete", deleteAction);
+		actionMap.put("delete", deleteButton.getAction());
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.ALT_DOWN_MASK), "quit");
-		actionMap.put("quit", quitAction);
+		actionMap.put("quit", quitButton.getAction());
 
 		addWindowListener(this);
 		addKeyListener(this);
@@ -264,7 +280,7 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 		// Only enabled if only one entry selected
 		this.viewAction.setEnabled(size == 1 && selection.iterator().next().isFile());
-		this.editAction.setEnabled(size == 1 && selection.iterator().next().isFile());
+		this.editButton.setEnabled(size == 1 && selection.iterator().next().isFile());
 
 		// Only enabled if selection isn't empty
 		this.copyAction.setEnabled(size > 0);
