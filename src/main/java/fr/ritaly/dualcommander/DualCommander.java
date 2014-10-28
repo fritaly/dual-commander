@@ -19,8 +19,12 @@ package fr.ritaly.dualcommander;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
 import java.util.List;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -45,7 +49,7 @@ import org.apache.commons.lang.Validate;
 
 import com.jgoodies.looks.windows.WindowsLookAndFeel;
 
-public class DualCommander extends JFrame implements ChangeListener, KeyListener {
+public class DualCommander extends JFrame implements ChangeListener, KeyListener, WindowListener {
 
 	private static final long serialVersionUID = 5445919782222373150L;
 
@@ -261,8 +265,51 @@ public class DualCommander extends JFrame implements ChangeListener, KeyListener
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.ALT_DOWN_MASK), "quit");
 		actionMap.put("quit", quitButton.getAction());
 
+		addWindowListener(this);
+
 		// Init the buttons
 		refreshButtons(getLeftPanel().getSelection());
+
+		// Reload the last configuration
+		final Preferences prefs = Preferences.userNodeForPackage(this.getClass());
+
+		final Preferences leftPrefs = prefs.node("left.panel");
+		final int leftTabCount = leftPrefs.getInt("tab.count", 1);
+
+		for (int i = 0; i < leftTabCount; i++) {
+			if (i > 0) {
+				// FIXME Factor this logic
+				final FileList fileList = new FileList(new File("."));
+				fileList.addChangeListener(this);
+				fileList.addKeyListener(this);
+
+				this.leftTabbedPane.addTab(fileList.getDirectory().getName(), fileList);
+			}
+
+			final String path = leftPrefs.get(String.format("tab.%d.directory", i), ".");
+
+			// Set the tab to the correct directory
+			((FileList) this.leftTabbedPane.getComponentAt(i)).setDirectory(new File(path));
+		}
+
+		final Preferences rightPrefs = prefs.node("right.panel");
+		final int rightTabCount = rightPrefs.getInt("tab.count", 1);
+
+		for (int i = 0; i < rightTabCount; i++) {
+			if (i > 0) {
+				// FIXME Factor this logic
+				final FileList fileList = new FileList(new File("."));
+				fileList.addChangeListener(this);
+				fileList.addKeyListener(this);
+
+				this.rightTabbedPane.addTab(fileList.getDirectory().getName(), fileList);
+			}
+
+			final String path = rightPrefs.get(String.format("tab.%d.directory", i), ".");
+
+			// Set the tab to the correct directory
+			((FileList) this.rightTabbedPane.getComponentAt(i)).setDirectory(new File(path));
+		}
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -359,6 +406,60 @@ public class DualCommander extends JFrame implements ChangeListener, KeyListener
 
 	@Override
 	public void keyTyped(KeyEvent e) {
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		try {
+			// Save the program state
+			final Preferences prefs = Preferences.userNodeForPackage(this.getClass());
+
+			final Preferences leftPrefs = prefs.node("left.panel");
+			leftPrefs.putInt("tab.count", this.leftTabbedPane.getTabCount());
+
+			for (int i = 0; i < this.leftTabbedPane.getTabCount(); i++) {
+				final FileList component = (FileList) this.leftTabbedPane.getComponentAt(i);
+
+				leftPrefs.put(String.format("tab.%d.directory", i), component.getDirectory().getAbsolutePath());
+			}
+
+			final Preferences rightPrefs = prefs.node("right.panel");
+			rightPrefs.putInt("tab.count", this.rightTabbedPane.getTabCount());
+
+			for (int i = 0; i < this.rightTabbedPane.getTabCount(); i++) {
+				final FileList component = (FileList) this.rightTabbedPane.getComponentAt(i);
+
+				rightPrefs.put(String.format("tab.%d.directory", i), component.getDirectory().getAbsolutePath());
+			}
+
+			prefs.sync();
+		} catch (BackingStoreException e1) {
+			// Not a big deal
+		}
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
 	}
 
 	public static void main(String[] args) {
