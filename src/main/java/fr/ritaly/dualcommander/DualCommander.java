@@ -18,7 +18,6 @@ package fr.ritaly.dualcommander;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
@@ -35,7 +34,6 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -49,7 +47,7 @@ import org.apache.commons.lang.Validate;
 
 import com.jgoodies.looks.windows.WindowsLookAndFeel;
 
-public class DualCommander extends JFrame implements ChangeListener, KeyListener, WindowListener {
+public class DualCommander extends JFrame implements ChangeListener, WindowListener {
 
 	private static final long serialVersionUID = 5445919782222373150L;
 
@@ -195,8 +193,7 @@ public class DualCommander extends JFrame implements ChangeListener, KeyListener
 
 	private final JButton quitButton = createButton(quitAction);
 
-	// TODO Encapsulate those JTabbedPane into a widget
-	private final JTabbedPane leftTabbedPane, rightTabbedPane;
+	private final TabbedPane leftPane, rightPane;
 
 	public DualCommander() {
 		// TODO Generate a fat jar at build time
@@ -212,25 +209,13 @@ public class DualCommander extends JFrame implements ChangeListener, KeyListener
 		// Layout, columns & rows
 		setLayout(new MigLayout("insets 0px", "[grow]0px[grow]", "[grow][]"));
 
-		// TODO Retrieve the previous directory displayed
-		final FileList leftList = new FileList(new File("."));
-		leftList.addChangeListener(this);
-		leftList.addKeyListener(this);
-
-		this.leftTabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		this.leftTabbedPane.addTab(leftList.getDirectory().getName(), leftList);
-
-		final FileList rightList = new FileList(new File("."));
-		rightList.addChangeListener(this);
-		rightList.addKeyListener(this);
-
-		this.rightTabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		this.rightTabbedPane.addTab(rightList.getDirectory().getName(), rightList);
+		this.leftPane = new TabbedPane();
+		this.rightPane = new TabbedPane();
 
 		// Adding the 2 components to the same sizegroup ensures they always
 		// keep the same width
-		getContentPane().add(leftTabbedPane, "grow, sizegroup g1");
-		getContentPane().add(rightTabbedPane, "grow, sizegroup g1, wrap");
+		getContentPane().add(leftPane, "grow, sizegroup g1");
+		getContentPane().add(rightPane, "grow, sizegroup g1, wrap");
 
 		// The 7 buttons must all have the same width (they must belong to the
 		// same size group)
@@ -247,8 +232,8 @@ public class DualCommander extends JFrame implements ChangeListener, KeyListener
 		getContentPane().add(buttonPanel, "grow, span 2");
 
 		// Register shortcuts at a global level (not on every component)
-		final InputMap inputMap = this.leftTabbedPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-		final ActionMap actionMap = this.leftTabbedPane.getActionMap();
+		final InputMap inputMap = this.leftPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		final ActionMap actionMap = this.leftPane.getActionMap();
 
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0, true), "view");
 		actionMap.put("view", viewButton.getAction());
@@ -267,9 +252,6 @@ public class DualCommander extends JFrame implements ChangeListener, KeyListener
 
 		addWindowListener(this);
 
-		// Init the buttons
-		refreshButtons(getLeftPanel().getSelection());
-
 		// Reload the last configuration
 		final Preferences prefs = Preferences.userNodeForPackage(this.getClass());
 
@@ -277,39 +259,28 @@ public class DualCommander extends JFrame implements ChangeListener, KeyListener
 		final int leftTabCount = leftPrefs.getInt("tab.count", 1);
 
 		for (int i = 0; i < leftTabCount; i++) {
-			if (i > 0) {
-				// FIXME Factor this logic
-				final FileList fileList = new FileList(new File("."));
-				fileList.addChangeListener(this);
-				fileList.addKeyListener(this);
-
-				this.leftTabbedPane.addTab(fileList.getDirectory().getName(), fileList);
-			}
+			leftPane.addFileTab();
 
 			final String path = leftPrefs.get(String.format("tab.%d.directory", i), ".");
 
 			// Set the tab to the correct directory
-			((FileList) this.leftTabbedPane.getComponentAt(i)).setDirectory(new File(path));
+			this.leftPane.getFileTabAt(i).setDirectory(new File(path));
 		}
 
 		final Preferences rightPrefs = prefs.node("right.panel");
 		final int rightTabCount = rightPrefs.getInt("tab.count", 1);
 
 		for (int i = 0; i < rightTabCount; i++) {
-			if (i > 0) {
-				// FIXME Factor this logic
-				final FileList fileList = new FileList(new File("."));
-				fileList.addChangeListener(this);
-				fileList.addKeyListener(this);
-
-				this.rightTabbedPane.addTab(fileList.getDirectory().getName(), fileList);
-			}
+			this.rightPane.addFileTab();
 
 			final String path = rightPrefs.get(String.format("tab.%d.directory", i), ".");
 
 			// Set the tab to the correct directory
-			((FileList) this.rightTabbedPane.getComponentAt(i)).setDirectory(new File(path));
+			this.rightPane.getFileTabAt(i).setDirectory(new File(path));
 		}
+
+		// Init the buttons
+		refreshButtons(getLeftPanel().getSelection());
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -336,11 +307,11 @@ public class DualCommander extends JFrame implements ChangeListener, KeyListener
 	}
 
 	private FileList getLeftPanel() {
-		return (FileList) this.leftTabbedPane.getSelectedComponent();
+		return this.leftPane.getActiveComponent();
 	}
 
 	private FileList getRightPanel() {
-		return (FileList) this.rightTabbedPane.getSelectedComponent();
+		return this.rightPane.getActiveComponent();
 	}
 
 	@Override
@@ -348,64 +319,10 @@ public class DualCommander extends JFrame implements ChangeListener, KeyListener
 		if (e.getSource() == getLeftPanel()) {
 			// Update the buttons based on the current selection
 			refreshButtons(getLeftPanel().getSelection());
-
-			// Update the tab's title
-			this.leftTabbedPane.setTitleAt(this.leftTabbedPane.getSelectedIndex(), getLeftPanel().getDirectory().getName());
 		} else if (e.getSource() == getRightPanel()) {
 			// Update the buttons based on the current selection
 			refreshButtons(getRightPanel().getSelection());
-
-			// Update the tab's title
-			this.rightTabbedPane.setTitleAt(this.rightTabbedPane.getSelectedIndex(), getRightPanel().getDirectory().getName());
 		}
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		JTabbedPane tabbedPane = null;
-
-		if (e.getSource() == getLeftPanel()) {
-			tabbedPane = leftTabbedPane;
-		} else if (e.getSource() == getRightPanel()) {
-			tabbedPane = rightTabbedPane;
-		}
-
-		if (tabbedPane != null) {
-			final FileList sourcePanel = (FileList) tabbedPane.getSelectedComponent();
-			final boolean metaDown = (e.getModifiersEx() | KeyEvent.META_DOWN_MASK) == KeyEvent.META_DOWN_MASK;
-
-			if ((e.getKeyCode() == KeyEvent.VK_T) && metaDown) {
-				// Create a new tab
-				// TODO Factor out this logic in a TabbedPane class
-				final FileList newPanel = new FileList(sourcePanel.getDirectory());
-				newPanel.addChangeListener(this);
-				newPanel.addKeyListener(this);
-
-				tabbedPane.addTab(newPanel.getDirectory().getName(), newPanel);
-			} else if ((e.getKeyCode() == KeyEvent.VK_W) && metaDown) {
-				if (tabbedPane.getTabCount() > 1) {
-					// Close the current tab (only if not the last one)
-					sourcePanel.removeChangeListener(this);
-					sourcePanel.removeKeyListener(this);
-
-					tabbedPane.removeTabAt(tabbedPane.getSelectedIndex());
-				}
-			} else if ((e.getKeyCode() >= KeyEvent.VK_1) && (e.getKeyCode() <= KeyEvent.VK_9) && metaDown) {
-				final int index = e.getKeyCode() - KeyEvent.VK_1;
-
-				if (index <= tabbedPane.getTabCount() - 1) {
-					tabbedPane.setSelectedIndex(index);
-				}
-			}
-		}
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
 	}
 
 	@Override
@@ -422,20 +339,21 @@ public class DualCommander extends JFrame implements ChangeListener, KeyListener
 			// Save the program state
 			final Preferences prefs = Preferences.userNodeForPackage(this.getClass());
 
+			// FIXME Move this logic to class TabbedPane itself
 			final Preferences leftPrefs = prefs.node("left.panel");
-			leftPrefs.putInt("tab.count", this.leftTabbedPane.getTabCount());
+			leftPrefs.putInt("tab.count", this.leftPane.getTabCount());
 
-			for (int i = 0; i < this.leftTabbedPane.getTabCount(); i++) {
-				final FileList component = (FileList) this.leftTabbedPane.getComponentAt(i);
+			for (int i = 0; i < this.leftPane.getTabCount(); i++) {
+				final FileList component = (FileList) this.leftPane.getComponentAt(i);
 
 				leftPrefs.put(String.format("tab.%d.directory", i), component.getDirectory().getAbsolutePath());
 			}
 
 			final Preferences rightPrefs = prefs.node("right.panel");
-			rightPrefs.putInt("tab.count", this.rightTabbedPane.getTabCount());
+			rightPrefs.putInt("tab.count", this.rightPane.getTabCount());
 
-			for (int i = 0; i < this.rightTabbedPane.getTabCount(); i++) {
-				final FileList component = (FileList) this.rightTabbedPane.getComponentAt(i);
+			for (int i = 0; i < this.rightPane.getTabCount(); i++) {
+				final FileList component = (FileList) this.rightPane.getComponentAt(i);
 
 				rightPrefs.put(String.format("tab.%d.directory", i), component.getDirectory().getAbsolutePath());
 			}
