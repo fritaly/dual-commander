@@ -198,6 +198,8 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 	private final TabbedPane rightPane = new TabbedPane();
 
+	private volatile boolean shiftPressed = false;
+
 	public DualCommander() {
 		// TODO Generate a fat jar at build time
 		super(String.format("Dual Commander %s", Utils.getApplicationVersion()));
@@ -242,19 +244,19 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		final ActionMap actionMap = this.leftPane.getActionMap();
 
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0, true), "view");
-		actionMap.put("view", viewButton.getAction());
+		actionMap.put("view", viewAction);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0, true), "edit");
-		actionMap.put("edit", editButton.getAction());
+		actionMap.put("edit", editAction);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0, true), "copy");
-		actionMap.put("copy", copyButton.getAction());
+		actionMap.put("copy", copyAction);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0, true), "move");
-		actionMap.put("move", moveButton.getAction());
+		actionMap.put("move", moveAction);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0, true), "mkdir");
-		actionMap.put("mkdir", mkdirButton.getAction());
+		actionMap.put("mkdir", mkdirAction);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F8, 0, true), "delete");
-		actionMap.put("delete", deleteButton.getAction());
+		actionMap.put("delete", deleteAction);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.ALT_DOWN_MASK), "quit");
-		actionMap.put("quit", quitButton.getAction());
+		actionMap.put("quit", quitAction);
 
 		addWindowListener(this);
 		addKeyListener(this);
@@ -344,10 +346,16 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		if ((e.getModifiers() | KeyEvent.SHIFT_MASK) == KeyEvent.SHIFT_MASK) {
+			shiftPressed = true;
+		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
+		if ((e.getModifiers() | KeyEvent.SHIFT_DOWN_MASK) == KeyEvent.SHIFT_DOWN_MASK) {
+			shiftPressed = false;
+		}
 	}
 
 	@Override
