@@ -246,17 +246,17 @@ public class DualCommander extends JFrame implements ChangeListener, KeyListener
 		final InputMap inputMap = this.leftTabbedPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		final ActionMap actionMap = this.leftTabbedPane.getActionMap();
 
-		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), "view");
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0, true), "view");
 		actionMap.put("view", viewButton.getAction());
-		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0), "edit");
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0, true), "edit");
 		actionMap.put("edit", editButton.getAction());
-		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0), "copy");
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0, true), "copy");
 		actionMap.put("copy", copyButton.getAction());
-		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0), "move");
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0, true), "move");
 		actionMap.put("move", moveButton.getAction());
-		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0), "mkdir");
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0, true), "mkdir");
 		actionMap.put("mkdir", mkdirButton.getAction());
-		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F8, 0), "delete");
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F8, 0, true), "delete");
 		actionMap.put("delete", deleteButton.getAction());
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.ALT_DOWN_MASK), "quit");
 		actionMap.put("quit", quitButton.getAction());
