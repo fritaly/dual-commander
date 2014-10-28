@@ -21,11 +21,11 @@ public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListen
 	}
 
 	public FileList addFileTab() {
-		return addFileTab(new File("."));
+		return addFileTab(new File(System.getProperty("user.home")));
 	}
 
 	public FileList addFileTab(File directory) {
-		// The constructor called will validate the parameter
+		// The called constructor will validate the parameter
 		final FileList fileList = new FileList(directory);
 		fileList.addChangeListener(this);
 		fileList.addKeyListener(this);
