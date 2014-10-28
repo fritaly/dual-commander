@@ -261,6 +261,9 @@ public class DualCommander extends JFrame implements ChangeListener, KeyListener
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.ALT_DOWN_MASK), "quit");
 		actionMap.put("quit", quitButton.getAction());
 
+		// Init the buttons
+		refreshButtons(getLeftPanel().getSelection());
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 	}
