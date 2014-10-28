@@ -3,10 +3,13 @@ package fr.ritaly.dualcommander;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
+import java.util.prefs.Preferences;
 
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import org.apache.commons.lang.Validate;
 
 public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListener {
 
@@ -84,6 +87,16 @@ public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListen
 		if (e.getSource() == getSelectedComponent()) {
 			// Update the current tab's title
 			this.setTitleAt(getSelectedIndex(), getActiveComponent().getDirectory().getName());
+		}
+	}
+
+	public void saveState(Preferences preferences) {
+		Validate.notNull(preferences, "The given preferences is null");
+
+		preferences.putInt("tab.count", getTabCount());
+
+		for (int i = 0; i < getTabCount(); i++) {
+			preferences.put(String.format("tab.%d.directory", i), getFileTabAt(i).getDirectory().getAbsolutePath());
 		}
 	}
 }

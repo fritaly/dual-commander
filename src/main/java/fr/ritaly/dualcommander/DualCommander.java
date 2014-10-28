@@ -193,7 +193,9 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 	private final JButton quitButton = createButton(quitAction);
 
-	private final TabbedPane leftPane, rightPane;
+	private final TabbedPane leftPane = new TabbedPane();
+
+	private final TabbedPane rightPane = new TabbedPane();
 
 	public DualCommander() {
 		// TODO Generate a fat jar at build time
@@ -208,9 +210,6 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 		// Layout, columns & rows
 		setLayout(new MigLayout("insets 0px", "[grow]0px[grow]", "[grow][]"));
-
-		this.leftPane = new TabbedPane();
-		this.rightPane = new TabbedPane();
 
 		// Adding the 2 components to the same sizegroup ensures they always
 		// keep the same width
@@ -341,24 +340,8 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 			// Save the program state
 			final Preferences prefs = Preferences.userNodeForPackage(this.getClass());
 
-			// FIXME Move this logic to class TabbedPane itself
-			final Preferences leftPrefs = prefs.node("left.panel");
-			leftPrefs.putInt("tab.count", this.leftPane.getTabCount());
-
-			for (int i = 0; i < this.leftPane.getTabCount(); i++) {
-				final FileList component = (FileList) this.leftPane.getComponentAt(i);
-
-				leftPrefs.put(String.format("tab.%d.directory", i), component.getDirectory().getAbsolutePath());
-			}
-
-			final Preferences rightPrefs = prefs.node("right.panel");
-			rightPrefs.putInt("tab.count", this.rightPane.getTabCount());
-
-			for (int i = 0; i < this.rightPane.getTabCount(); i++) {
-				final FileList component = (FileList) this.rightPane.getComponentAt(i);
-
-				rightPrefs.put(String.format("tab.%d.directory", i), component.getDirectory().getAbsolutePath());
-			}
+			this.leftPane.saveState(prefs.node("left.panel"));
+			this.rightPane.saveState(prefs.node("right.panel"));
 
 			prefs.sync();
 		} catch (BackingStoreException e1) {
