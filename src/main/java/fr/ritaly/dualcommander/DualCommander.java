@@ -259,24 +259,26 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		final int leftTabCount = leftPrefs.getInt("tab.count", 1);
 
 		for (int i = 0; i < leftTabCount; i++) {
-			leftPane.addFileTab();
-
-			final String path = leftPrefs.get(String.format("tab.%d.directory", i), ".");
-
 			// Set the tab to the correct directory
-			this.leftPane.getFileTabAt(i).setDirectory(new File(path));
+			this.leftPane.addFileTab(new File(leftPrefs.get(String.format("tab.%d.directory", i), ".")));
+		}
+
+		// Ensure the tabbed pane has at least tab
+		if (this.leftPane.getTabCount() == 0) {
+			this.leftPane.addFileTab();
 		}
 
 		final Preferences rightPrefs = prefs.node("right.panel");
 		final int rightTabCount = rightPrefs.getInt("tab.count", 1);
 
 		for (int i = 0; i < rightTabCount; i++) {
-			this.rightPane.addFileTab();
-
-			final String path = rightPrefs.get(String.format("tab.%d.directory", i), ".");
-
 			// Set the tab to the correct directory
-			this.rightPane.getFileTabAt(i).setDirectory(new File(path));
+			this.rightPane.addFileTab(new File(rightPrefs.get(String.format("tab.%d.directory", i), ".")));
+		}
+
+		// Ensure the tabbed pane has at least tab
+		if (this.rightPane.getTabCount() == 0) {
+			this.rightPane.addFileTab();
 		}
 
 		// Init the buttons
