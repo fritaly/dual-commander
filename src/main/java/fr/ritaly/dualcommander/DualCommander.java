@@ -159,19 +159,37 @@ public class DualCommander extends JFrame implements ChangeListener, KeyListener
 		return button;
 	}
 
-	private final JButton viewButton = createButton(new ViewAction());
+	// --- Actions --- //
 
-	private final JButton editButton = createButton(new EditAction());
+	private final ViewAction viewAction = new ViewAction();
 
-	private final JButton copyButton = createButton(new CopyAction());
+	private final EditAction editAction = new EditAction();
 
-	private final JButton moveButton = createButton(new MoveAction());
+	private final CopyAction copyAction = new CopyAction();
 
-	private final JButton mkdirButton = createButton(new MkdirAction());
+	private final MoveAction moveAction = new MoveAction();
 
-	private final JButton deleteButton = createButton(new DeleteAction());
+	private final MkdirAction mkdirAction = new MkdirAction();
 
-	private final JButton quitButton = createButton(new QuitAction());
+	private final DeleteAction deleteAction = new DeleteAction();
+
+	private final QuitAction quitAction = new QuitAction();
+
+	// --- Buttons --- //
+
+	private final JButton viewButton = createButton(viewAction);
+
+	private final JButton editButton = createButton(editAction);
+
+	private final JButton copyButton = createButton(copyAction);
+
+	private final JButton moveButton = createButton(moveAction);
+
+	private final JButton mkdirButton = createButton(mkdirAction);
+
+	private final JButton deleteButton = createButton(deleteAction);
+
+	private final JButton quitButton = createButton(quitAction);
 
 	// TODO Encapsulate those JTabbedPane into a widget
 	private final JTabbedPane leftTabbedPane, rightTabbedPane;
@@ -250,18 +268,21 @@ public class DualCommander extends JFrame implements ChangeListener, KeyListener
 	private void refreshButtons(List<File> selection) {
 		final int size = selection.size();
 
+		// Enable / disable the actions so that key shortcuts and buttons have a
+		// consistent behavior
+
 		// Only enabled if only one entry selected
-		this.viewButton.setEnabled(size == 1);
-		this.editButton.setEnabled(size == 1);
+		this.viewAction.setEnabled(size == 1 && selection.iterator().next().isFile());
+		this.editButton.setEnabled(size == 1 && selection.iterator().next().isFile());
 
 		// Only enabled if selection isn't empty
-		this.copyButton.setEnabled(size > 0);
-		this.moveButton.setEnabled(size > 0);
-		this.deleteButton.setEnabled(size > 0);
+		this.copyAction.setEnabled(size > 0);
+		this.moveAction.setEnabled(size > 0);
+		this.deleteAction.setEnabled(size > 0);
 
 		// Always enabled
-		this.mkdirButton.setEnabled(true);
-		this.quitButton.setEnabled(true);
+		this.mkdirAction.setEnabled(true);
+		this.quitAction.setEnabled(true);
 	}
 
 	private FileList getLeftPanel() {
