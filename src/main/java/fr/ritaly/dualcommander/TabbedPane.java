@@ -70,16 +70,30 @@ public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListen
 				if (index <= getTabCount() - 1) {
 					setSelectedIndex(index);
 				}
+			} else {
+				// Propagate event to our listeners
+				processKeyEvent(new KeyEvent(this, e.getID(), e.getWhen(), e.getModifiers(), e.getKeyCode(), e.getKeyChar(),
+						e.getKeyLocation()));
 			}
 		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
+		if (e.getSource() == getSelectedComponent()) {
+			// Propagate the event to our listeners
+			processKeyEvent(new KeyEvent(this, e.getID(), e.getWhen(), e.getModifiers(), e.getKeyCode(), e.getKeyChar(),
+					e.getKeyLocation()));
+		}
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
+		if (e.getSource() == getSelectedComponent()) {
+			// Propagate the event to our listeners
+			processKeyEvent(new KeyEvent(this, e.getID(), e.getWhen(), e.getModifiers(), e.getKeyCode(), e.getKeyChar(),
+					e.getKeyLocation()));
+		}
 	}
 
 	@Override

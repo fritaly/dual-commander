@@ -18,6 +18,7 @@ package fr.ritaly.dualcommander;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
@@ -47,7 +48,7 @@ import org.apache.commons.lang.Validate;
 
 import com.jgoodies.looks.windows.WindowsLookAndFeel;
 
-public class DualCommander extends JFrame implements ChangeListener, WindowListener {
+public class DualCommander extends JFrame implements ChangeListener, WindowListener, KeyListener {
 
 	private static final long serialVersionUID = 5445919782222373150L;
 
@@ -196,7 +197,10 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		setLayout(new MigLayout("insets 0px", "[grow]0px[grow]", "[grow][]"));
 
 		this.leftPane.addChangeListener(this);
+		this.leftPane.addKeyListener(this);
+
 		this.rightPane.addChangeListener(this);
+		this.rightPane.addKeyListener(this);
 
 		// Adding the 2 components to the same sizegroup ensures they always
 		// keep the same width
@@ -237,6 +241,7 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		actionMap.put("quit", quitAction);
 
 		addWindowListener(this);
+		addKeyListener(this);
 
 		// Reload the last configuration and init the left & right panels accordingly
 		final Preferences prefs = Preferences.userNodeForPackage(this.getClass());
@@ -319,6 +324,18 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 	@Override
 	public void windowOpened(WindowEvent e) {
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
 	}
 
 	public static void main(String[] args) {
