@@ -87,6 +87,9 @@ public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListen
 		if (e.getSource() == getSelectedComponent()) {
 			// Update the current tab's title
 			this.setTitleAt(getSelectedIndex(), getActiveComponent().getDirectory().getName());
+
+			// Propagate the event
+			fireStateChanged();
 		}
 	}
 

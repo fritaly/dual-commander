@@ -195,6 +195,9 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		// Layout, columns & rows
 		setLayout(new MigLayout("insets 0px", "[grow]0px[grow]", "[grow][]"));
 
+		this.leftPane.addChangeListener(this);
+		this.rightPane.addChangeListener(this);
+
 		// Adding the 2 components to the same sizegroup ensures they always
 		// keep the same width
 		getContentPane().add(leftPane, "grow, sizegroup g1");
@@ -242,7 +245,7 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		this.rightPane.init(prefs.node("right.panel"));
 
 		// Init the buttons
-		refreshButtons(getLeftPanel().getSelection());
+		refreshButtons(this.leftPane.getActiveComponent().getSelection());
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -268,22 +271,14 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		this.quitAction.setEnabled(true);
 	}
 
-	private FileList getLeftPanel() {
-		return this.leftPane.getActiveComponent();
-	}
-
-	private FileList getRightPanel() {
-		return this.rightPane.getActiveComponent();
-	}
-
 	@Override
 	public void stateChanged(ChangeEvent e) {
-		if (e.getSource() == getLeftPanel()) {
+		if (e.getSource() == this.leftPane) {
 			// Update the buttons based on the current selection
-			refreshButtons(getLeftPanel().getSelection());
-		} else if (e.getSource() == getRightPanel()) {
+			refreshButtons(this.leftPane.getActiveComponent().getSelection());
+		} else if (e.getSource() == this.rightPane) {
 			// Update the buttons based on the current selection
-			refreshButtons(getRightPanel().getSelection());
+			refreshButtons(this.rightPane.getActiveComponent().getSelection());
 		}
 	}
 
