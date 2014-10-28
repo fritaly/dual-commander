@@ -54,8 +54,8 @@ public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListen
 			final boolean metaDown = (e.getModifiersEx() | KeyEvent.META_DOWN_MASK) == KeyEvent.META_DOWN_MASK;
 
 			if ((e.getKeyCode() == KeyEvent.VK_T) && metaDown) {
-				// Create a new tab
-				addFileTab(getActiveComponent().getDirectory());
+				// Create a new tab and set to focus on it
+				setSelectedComponent(addFileTab(getActiveComponent().getDirectory()));
 			} else if ((e.getKeyCode() == KeyEvent.VK_W) && metaDown) {
 				if (getTabCount() > 1) {
 					// Close the current tab (only if not the last one)
