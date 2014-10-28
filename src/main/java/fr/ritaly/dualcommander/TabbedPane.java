@@ -90,6 +90,22 @@ public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListen
 		}
 	}
 
+	public void init(Preferences preferences) {
+		Validate.notNull(preferences, "The given preferences is null");
+
+		final int tabCount = preferences.getInt("tab.count", 1);
+
+		for (int i = 0; i < tabCount; i++) {
+			// Create a tab set to the correct directory
+			addFileTab(new File(preferences.get(String.format("tab.%d.directory", i), ".")));
+		}
+
+		// Ensure the tabbed pane has at least tab
+		if (getTabCount() == 0) {
+			addFileTab();
+		}
+	}
+
 	public void saveState(Preferences preferences) {
 		Validate.notNull(preferences, "The given preferences is null");
 
