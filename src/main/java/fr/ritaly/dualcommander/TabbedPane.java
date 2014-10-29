@@ -20,35 +20,35 @@ public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListen
 		super(JTabbedPane.TOP);
 	}
 
-	public FileList addFileTab() {
-		return addFileTab(new File(System.getProperty("user.home")));
+	public DirectoryBrowser addBrowserTab() {
+		return addBrowserTab(new File(System.getProperty("user.home")));
 	}
 
-	public FileList addFileTab(File directory) {
+	public DirectoryBrowser addBrowserTab(File directory) {
 		// The called constructor will validate the parameter
-		final FileList fileList = new FileList(directory);
-		fileList.addChangeListener(this);
-		fileList.addKeyListener(this);
+		final DirectoryBrowser browser = new DirectoryBrowser(directory);
+		browser.addChangeListener(this);
+		browser.addKeyListener(this);
 
-		super.addTab(fileList.getDirectory().getName(), fileList);
+		super.addTab(browser.getDirectory().getName(), browser);
 
-		return fileList;
+		return browser;
 	}
 
-	public void closeActiveFileTab() {
-		final FileList fileList = getActiveComponent();
-		fileList.removeChangeListener(this);
-		fileList.removeKeyListener(this);
+	public void closeActiveBrowserTab() {
+		final DirectoryBrowser browser = getActiveBrowser();
+		browser.removeChangeListener(this);
+		browser.removeKeyListener(this);
 
 		removeTabAt(getSelectedIndex());
 	}
 
-	public FileList getActiveComponent() {
-		return (FileList) getSelectedComponent();
+	public DirectoryBrowser getActiveBrowser() {
+		return (DirectoryBrowser) getSelectedComponent();
 	}
 
-	public FileList getFileTabAt(int index) {
-		return (FileList) getComponentAt(index);
+	public DirectoryBrowser getBrowserAt(int index) {
+		return (DirectoryBrowser) getComponentAt(index);
 	}
 
 	@Override
@@ -58,11 +58,11 @@ public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListen
 
 			if ((e.getKeyCode() == KeyEvent.VK_T) && metaDown) {
 				// Create a new tab and set to focus on it
-				setSelectedComponent(addFileTab(getActiveComponent().getDirectory()));
+				setSelectedComponent(addBrowserTab(getActiveBrowser().getDirectory()));
 			} else if ((e.getKeyCode() == KeyEvent.VK_W) && metaDown) {
 				if (getTabCount() > 1) {
 					// Close the current tab (only if not the last one)
-					closeActiveFileTab();
+					closeActiveBrowserTab();
 				}
 			} else if ((e.getKeyCode() >= KeyEvent.VK_1) && (e.getKeyCode() <= KeyEvent.VK_9) && metaDown) {
 				final int index = e.getKeyCode() - KeyEvent.VK_1;
@@ -100,7 +100,7 @@ public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListen
 	public void stateChanged(ChangeEvent e) {
 		if (e.getSource() == getSelectedComponent()) {
 			// Update the current tab's title
-			this.setTitleAt(getSelectedIndex(), getActiveComponent().getDirectory().getName());
+			this.setTitleAt(getSelectedIndex(), getActiveBrowser().getDirectory().getName());
 
 			// Propagate the event
 			fireStateChanged();
@@ -114,12 +114,12 @@ public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListen
 
 		for (int i = 0; i < tabCount; i++) {
 			// Create a tab set to the correct directory
-			addFileTab(new File(preferences.get(String.format("tab.%d.directory", i), ".")));
+			addBrowserTab(new File(preferences.get(String.format("tab.%d.directory", i), ".")));
 		}
 
 		// Ensure the tabbed pane has at least tab
 		if (getTabCount() == 0) {
-			addFileTab();
+			addBrowserTab();
 		}
 	}
 
@@ -129,7 +129,7 @@ public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListen
 		preferences.putInt("tab.count", getTabCount());
 
 		for (int i = 0; i < getTabCount(); i++) {
-			preferences.put(String.format("tab.%d.directory", i), getFileTabAt(i).getDirectory().getAbsolutePath());
+			preferences.put(String.format("tab.%d.directory", i), getBrowserAt(i).getDirectory().getAbsolutePath());
 		}
 	}
 }

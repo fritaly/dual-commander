@@ -241,21 +241,21 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 		// Register shortcuts at a global level (not on every component)
 		final InputMap inputMap = this.leftPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-		final ActionMap actionMap = this.leftPane.getActionMap();
-
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0, true), "view");
-		actionMap.put("view", viewAction);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0, true), "edit");
-		actionMap.put("edit", editAction);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0, true), "copy");
-		actionMap.put("copy", copyAction);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0, true), "move");
-		actionMap.put("move", moveAction);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0, true), "mkdir");
-		actionMap.put("mkdir", mkdirAction);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F8, 0, true), "delete");
-		actionMap.put("delete", deleteAction);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.ALT_DOWN_MASK), "quit");
+
+		final ActionMap actionMap = this.leftPane.getActionMap();
+		actionMap.put("view", viewAction);
+		actionMap.put("edit", editAction);
+		actionMap.put("copy", copyAction);
+		actionMap.put("move", moveAction);
+		actionMap.put("mkdir", mkdirAction);
+		actionMap.put("delete", deleteAction);
 		actionMap.put("quit", quitAction);
 
 		addWindowListener(this);
@@ -268,7 +268,7 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		this.rightPane.init(prefs.node("right.panel"));
 
 		// Init the buttons
-		refreshButtons(this.leftPane.getActiveComponent().getSelection());
+		refreshButtons(this.leftPane.getActiveBrowser().getSelection());
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -298,10 +298,10 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 	public void stateChanged(ChangeEvent e) {
 		if (e.getSource() == this.leftPane) {
 			// Update the buttons based on the current selection
-			refreshButtons(this.leftPane.getActiveComponent().getSelection());
+			refreshButtons(this.leftPane.getActiveBrowser().getSelection());
 		} else if (e.getSource() == this.rightPane) {
 			// Update the buttons based on the current selection
-			refreshButtons(this.rightPane.getActiveComponent().getSelection());
+			refreshButtons(this.rightPane.getActiveBrowser().getSelection());
 		}
 	}
 

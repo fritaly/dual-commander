@@ -49,7 +49,7 @@ import org.apache.commons.lang.Validate;
 import fr.ritaly.dualcommander.event.ChangeEventSource;
 import fr.ritaly.dualcommander.event.ChangeEventSupport;
 
-public class FileList extends JPanel implements ListSelectionListener, ChangeEventSource, KeyListener, MouseListener, HasParentDirectory {
+public class DirectoryBrowser extends JPanel implements ListSelectionListener, ChangeEventSource, KeyListener, MouseListener, HasParentDirectory {
 
 	private static final Color EVEN_ROW = Color.WHITE;
 
@@ -168,7 +168,7 @@ public class FileList extends JPanel implements ListSelectionListener, ChangeEve
 
 	private final ChangeEventSupport eventSupport = new ChangeEventSupport();
 
-	public FileList(File directory) {
+	public DirectoryBrowser(File directory) {
 		Validate.notNull(directory, "The given directory is null");
 		Validate.isTrue(directory.exists(), String.format("The given directory '%s' doesn't exist", directory.getAbsolutePath()));
 		Validate.isTrue(directory.isDirectory(), String.format("The given path '%s' doesn't denote a directory", directory.getAbsolutePath()));
