@@ -18,6 +18,7 @@ package com.github.fritaly.dualcommander;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.prefs.Preferences;
 
 import org.apache.commons.lang.Validate;
@@ -36,7 +37,28 @@ public final class UserPreferences {
 	 */
 	private boolean showHidden = false;
 
+	/**
+	 * Whether the object state has been initialized.
+	 */
+	private boolean initialized = false;
+
 	public UserPreferences() {
+	}
+
+	private void assertInitialized() {
+		if (!isInitialized()) {
+			throw new IllegalStateException("The user preferences haven't been initialized");
+		}
+	}
+
+	private void assertNotInitialized() {
+		if (isInitialized()) {
+			throw new IllegalStateException("The user preferences have already been initialized");
+		}
+	}
+
+	private synchronized boolean isInitialized() {
+		return this.initialized;
 	}
 
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -47,23 +69,34 @@ public final class UserPreferences {
 		this.changeSupport.removePropertyChangeListener(listener);
 	}
 
-	public void init(Preferences preferences) {
+	public synchronized void init(Preferences preferences) {
+		assertNotInitialized();
+
 		Validate.notNull(preferences, "The given preferences is null");
 
 		this.showHidden = preferences.getBoolean(PROPERTY_SHOW_HIDDEN, false);
+
+		// The user preferences can be initialized only once
+		this.initialized = true;
 	}
 
 	public void saveState(Preferences preferences) {
+		assertInitialized();
+
 		Validate.notNull(preferences, "The given preferences is null");
 
 		preferences.putBoolean(PROPERTY_SHOW_HIDDEN, this.showHidden);
 	}
 
 	public boolean isShowHidden() {
+		assertInitialized();
+
 		return showHidden;
 	}
 
 	public void setShowHidden(boolean showHidden) {
+		assertInitialized();
+
 		final boolean oldValue = this.showHidden;
 
 		this.showHidden = showHidden;

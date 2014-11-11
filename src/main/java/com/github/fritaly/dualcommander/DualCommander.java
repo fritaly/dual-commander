@@ -329,9 +329,9 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		// Reload the last configuration and init the left & right panels accordingly
 		final Preferences prefs = Preferences.userNodeForPackage(this.getClass());
 
+		this.preferences.init(prefs.node("user.preferences"));
 		this.leftPane.init(prefs.node("left.panel"));
 		this.rightPane.init(prefs.node("right.panel"));
-		this.preferences.init(prefs.node("user.preferences"));
 
 		// Init the buttons
 		refreshButtons(this.leftPane.getActiveBrowser().getSelection());
