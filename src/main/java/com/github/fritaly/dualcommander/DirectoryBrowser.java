@@ -212,6 +212,10 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		return (parentDir != null) && parentDir.exists() ? parentDir : null;
 	}
 
+	public void refresh() {
+		setDirectory(getDirectory());
+	}
+
 	public void setDirectory(File directory) {
 		Validate.notNull(directory, "The given directory is null");
 		Validate.isTrue(directory.exists(), String.format("The given directory '%s' doesn't exist", directory.getAbsolutePath()));

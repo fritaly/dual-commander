@@ -445,6 +445,10 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 				logger.debug(String.format("User preference '%s' changed from %s to %s", e.getPropertyName(), e.getOldValue(),
 						e.getNewValue()));
 			}
+
+			// The 'show hidden' property changed, need to refresh the active directory browsers
+			this.leftPane.getActiveBrowser().refresh();
+			this.rightPane.getActiveBrowser().refresh();
 		}
 	}
 
