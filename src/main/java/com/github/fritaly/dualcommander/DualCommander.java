@@ -17,6 +17,8 @@
 package com.github.fritaly.dualcommander;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
@@ -55,7 +57,8 @@ import org.apache.log4j.Logger;
 
 import com.jgoodies.looks.windows.WindowsLookAndFeel;
 
-public class DualCommander extends JFrame implements ChangeListener, WindowListener, KeyListener, PropertyChangeListener {
+public class DualCommander extends JFrame implements ChangeListener, WindowListener, KeyListener, PropertyChangeListener,
+		FocusListener {
 
 	private static final long serialVersionUID = 5445919782222373150L;
 
@@ -239,6 +242,8 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 	private final TabbedPane rightPane;
 
+	private TabbedPane activePane;
+
 	private volatile boolean shiftPressed = false;
 
 	private final UserPreferences preferences = new UserPreferences();
@@ -279,10 +284,12 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		this.leftPane = new TabbedPane(preferences);
 		this.leftPane.addChangeListener(this);
 		this.leftPane.addKeyListener(this);
+		this.leftPane.addFocusListener(this);
 
 		this.rightPane = new TabbedPane(preferences);
 		this.rightPane.addChangeListener(this);
 		this.rightPane.addKeyListener(this);
+		this.rightPane.addFocusListener(this);
 
 		// Adding the 2 components to the same sizegroup ensures they always
 		// keep the same width
@@ -377,6 +384,7 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
+		// Event fired when the pane's user selection changes
 		if (e.getSource() == this.leftPane) {
 			// Update the buttons based on the current selection
 			refreshButtons(this.leftPane.getActiveBrowser().getSelection());
@@ -463,6 +471,40 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 	@Override
 	public void keyTyped(KeyEvent e) {
+	}
+
+	@Override
+	public void focusGained(FocusEvent e) {
+		if (e.getSource() == leftPane) {
+			this.activePane = leftPane;
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("Active pane is now left");
+			}
+		} else if (e.getSource() == rightPane) {
+			this.activePane = rightPane;
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("Active pane is now right");
+			}
+		}
+	}
+
+	@Override
+	public void focusLost(FocusEvent e) {
+		if (e.getSource() == leftPane) {
+			this.activePane = null;
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("Active pane is now null");
+			}
+		} else if (e.getSource() == rightPane) {
+			this.activePane = null;
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("Active pane is now null");
+			}
+		}
 	}
 
 	@Override

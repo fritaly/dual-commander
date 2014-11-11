@@ -19,6 +19,8 @@ package com.github.fritaly.dualcommander;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -45,12 +47,14 @@ import javax.swing.table.DefaultTableCellRenderer;
 import net.miginfocom.swing.MigLayout;
 
 import org.apache.commons.lang.Validate;
+import org.apache.log4j.Logger;
 
 import com.github.fritaly.dualcommander.event.ChangeEventSource;
 import com.github.fritaly.dualcommander.event.ChangeEventSupport;
 
 
-public class DirectoryBrowser extends JPanel implements ListSelectionListener, ChangeEventSource, KeyListener, MouseListener, HasParentDirectory {
+public class DirectoryBrowser extends JPanel implements ListSelectionListener, ChangeEventSource, KeyListener, MouseListener,
+		HasParentDirectory, FocusListener {
 
 	private static final Color EVEN_ROW = Color.WHITE;
 
@@ -158,6 +162,8 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 
 	private static final long serialVersionUID = 411590029543053088L;
 
+	private final Logger logger = Logger.getLogger(this.getClass());
+
 	private File directory;
 
 	private final SortedListModel<File> listModel;
@@ -190,6 +196,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		this.list.addListSelectionListener(this);
 		this.list.addKeyListener(this);
 		this.list.addMouseListener(this);
+		this.list.addFocusListener(this);
 
 		this.directoryButton.setFocusable(false);
 		this.directoryButton.setHorizontalAlignment(SwingConstants.LEFT);
@@ -374,5 +381,37 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
+	}
+
+	@Override
+	public void focusGained(FocusEvent e) {
+		if (e.getSource() == list) {
+			// Propagate the event
+			final FocusListener[] listeners = getListeners(FocusListener.class);
+
+			if (listeners != null) {
+				final FocusEvent event = new FocusEvent(this, e.getID(), e.isTemporary(), e.getOppositeComponent());
+
+				for (FocusListener listener : listeners) {
+					listener.focusGained(event);
+				}
+			}
+		}
+	}
+
+	@Override
+	public void focusLost(FocusEvent e) {
+		if (e.getSource() == list) {
+			// Propagate the event
+			final FocusListener[] listeners = getListeners(FocusListener.class);
+
+			if (listeners != null) {
+				final FocusEvent event = new FocusEvent(this, e.getID(), e.isTemporary(), e.getOppositeComponent());
+
+				for (FocusListener listener : listeners) {
+					listener.focusLost(event);
+				}
+			}
+		}
 	}
 }

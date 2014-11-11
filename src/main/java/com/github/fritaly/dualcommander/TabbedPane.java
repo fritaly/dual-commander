@@ -16,6 +16,8 @@
  */
 package com.github.fritaly.dualcommander;
 
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
@@ -28,7 +30,7 @@ import javax.swing.event.ChangeListener;
 import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 
-public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListener {
+public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListener, FocusListener {
 
 	private static final long serialVersionUID = 8522448669013461274L;
 
@@ -54,6 +56,7 @@ public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListen
 		final DirectoryBrowser browser = new DirectoryBrowser(preferences, directory);
 		browser.addChangeListener(this);
 		browser.addKeyListener(this);
+		browser.addFocusListener(this);
 
 		super.addTab(browser.getDirectory().getName(), browser);
 
@@ -68,6 +71,7 @@ public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListen
 		final DirectoryBrowser browser = getActiveBrowser();
 		browser.removeChangeListener(this);
 		browser.removeKeyListener(this);
+		browser.removeFocusListener(this);
 
 		final int index = getSelectedIndex();
 
@@ -142,6 +146,34 @@ public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListen
 		}
 	}
 
+	@Override
+	public void focusGained(FocusEvent e) {
+		// Propagate the event
+		final FocusListener[] listeners = getListeners(FocusListener.class);
+
+		if (listeners != null) {
+			final FocusEvent event = new FocusEvent(this, e.getID(), e.isTemporary(), e.getOppositeComponent());
+
+			for (FocusListener listener : listeners) {
+				listener.focusGained(event);
+			}
+		}
+	}
+
+	@Override
+	public void focusLost(FocusEvent e) {
+		// Propagate the event
+		final FocusListener[] listeners = getListeners(FocusListener.class);
+
+		if (listeners != null) {
+			final FocusEvent event = new FocusEvent(this, e.getID(), e.isTemporary(), e.getOppositeComponent());
+
+			for (FocusListener listener : listeners) {
+				listener.focusLost(event);
+			}
+		}
+	}
+
 	public void init(Preferences preferences) {
 		Validate.notNull(preferences, "The given preferences is null");
 
@@ -152,7 +184,7 @@ public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListen
 			addBrowserTab(new File(preferences.get(String.format("tab.%d.directory", i), ".")));
 		}
 
-		// Ensure the tabbed pane has at least tab
+		// Ensure the tabbed pane has at least one tab
 		if (getTabCount() == 0) {
 			addBrowserTab();
 		}
