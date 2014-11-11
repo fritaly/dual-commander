@@ -236,6 +236,8 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 	private volatile boolean shiftPressed = false;
 
+	private final ProgramPreferences preferences = new ProgramPreferences();
+
 	public DualCommander() {
 		// TODO Generate a fat jar at build time
 		super(String.format("Dual Commander %s", Utils.getApplicationVersion()));
@@ -343,6 +345,10 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		// Always enabled
 		this.mkdirAction.setEnabled(true);
 		this.quitAction.setEnabled(true);
+	}
+
+	public ProgramPreferences getPreferences() {
+		return preferences;
 	}
 
 	@Override
