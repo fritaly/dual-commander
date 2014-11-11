@@ -321,6 +321,7 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 		this.leftPane.init(prefs.node("left.panel"));
 		this.rightPane.init(prefs.node("right.panel"));
+		this.preferences.init(prefs.node("user.preferences"));
 
 		// Init the buttons
 		refreshButtons(this.leftPane.getActiveBrowser().getSelection());
@@ -380,6 +381,7 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 			this.leftPane.saveState(prefs.node("left.panel"));
 			this.rightPane.saveState(prefs.node("right.panel"));
+			this.preferences.saveState(prefs.node("user.preferences"));
 
 			prefs.sync();
 		} catch (BackingStoreException e1) {
