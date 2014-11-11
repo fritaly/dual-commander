@@ -51,7 +51,6 @@ import net.miginfocom.swing.MigLayout;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import com.jgoodies.looks.windows.WindowsLookAndFeel;
@@ -482,8 +481,6 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 	}
 
 	public static void main(String[] args) {
-		Logger.getRootLogger().setLevel(Level.DEBUG);
-
 		SwingUtilities.invokeLater(new Runnable() {
 
 			@Override
