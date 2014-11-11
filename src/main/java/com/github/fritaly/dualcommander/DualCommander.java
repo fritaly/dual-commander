@@ -230,9 +230,9 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 	private final JButton quitButton = createButton(quitAction);
 
-	private final TabbedPane leftPane = new TabbedPane();
+	private final TabbedPane leftPane;
 
-	private final TabbedPane rightPane = new TabbedPane();
+	private final TabbedPane rightPane;
 
 	private volatile boolean shiftPressed = false;
 
@@ -267,9 +267,11 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 		setJMenuBar(menuBar);
 
+		this.leftPane = new TabbedPane(preferences);
 		this.leftPane.addChangeListener(this);
 		this.leftPane.addKeyListener(this);
 
+		this.rightPane = new TabbedPane(preferences);
 		this.rightPane.addChangeListener(this);
 		this.rightPane.addKeyListener(this);
 

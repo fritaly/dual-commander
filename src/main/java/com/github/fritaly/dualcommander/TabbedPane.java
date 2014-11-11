@@ -31,9 +31,15 @@ public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListen
 
 	private static final long serialVersionUID = 8522448669013461274L;
 
-	public TabbedPane() {
+	private final UserPreferences preferences;
+
+	public TabbedPane(UserPreferences preferences) {
 		// Put the tabs at the top
 		super(JTabbedPane.TOP);
+
+		Validate.notNull(preferences, "The given user preferences are null");
+
+		this.preferences = preferences;
 	}
 
 	public DirectoryBrowser addBrowserTab() {
@@ -42,7 +48,7 @@ public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListen
 
 	public DirectoryBrowser addBrowserTab(File directory) {
 		// The called constructor will validate the parameter
-		final DirectoryBrowser browser = new DirectoryBrowser(directory);
+		final DirectoryBrowser browser = new DirectoryBrowser(preferences, directory);
 		browser.addChangeListener(this);
 		browser.addKeyListener(this);
 

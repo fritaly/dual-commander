@@ -169,10 +169,15 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 
 	private final ChangeEventSupport eventSupport = new ChangeEventSupport();
 
-	public DirectoryBrowser(File directory) {
+	private final UserPreferences preferences;
+
+	public DirectoryBrowser(UserPreferences preferences, File directory) {
+		Validate.notNull(preferences, "The given user preferences are null");
 		Validate.notNull(directory, "The given directory is null");
 		Validate.isTrue(directory.exists(), String.format("The given directory '%s' doesn't exist", directory.getAbsolutePath()));
 		Validate.isTrue(directory.isDirectory(), String.format("The given path '%s' doesn't denote a directory", directory.getAbsolutePath()));
+
+		this.preferences = preferences;
 
 		// Layout, columns & rows
 		setLayout(new MigLayout("insets 0px", "[grow]", "[][grow]"));
@@ -225,8 +230,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 
 		// Populate the list with the directory's entries
 		for (File file : directory.listFiles()) {
-			if (!file.isHidden()) {
-				// TODO Define an option to list hidden entries
+			if (!file.isHidden() || preferences.isShowHidden()) {
 				listModel.add(file);
 			}
 		}
