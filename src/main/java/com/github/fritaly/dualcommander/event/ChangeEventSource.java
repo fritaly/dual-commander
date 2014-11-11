@@ -14,13 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.ritaly.dualcommander.event;
+package com.github.fritaly.dualcommander.event;
 
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ChangeListener;
 
-public interface ListSelectionEventSource {
+public interface ChangeEventSource {
 
-	public void addListSelectionListener(ListSelectionListener listener);
+	public void addChangeListener(ChangeListener listener);
 
-	public void removeListSelectionListener(ListSelectionListener listener);
+	public void removeChangeListener(ChangeListener listener);
 }

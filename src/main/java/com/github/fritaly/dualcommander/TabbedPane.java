@@ -1,4 +1,4 @@
-package fr.ritaly.dualcommander;
+package com.github.fritaly.dualcommander;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

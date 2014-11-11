@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.ritaly.dualcommander;
+package com.github.fritaly.dualcommander;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -46,8 +46,9 @@ import net.miginfocom.swing.MigLayout;
 
 import org.apache.commons.lang.Validate;
 
-import fr.ritaly.dualcommander.event.ChangeEventSource;
-import fr.ritaly.dualcommander.event.ChangeEventSupport;
+import com.github.fritaly.dualcommander.event.ChangeEventSource;
+import com.github.fritaly.dualcommander.event.ChangeEventSupport;
+
 
 public class DirectoryBrowser extends JPanel implements ListSelectionListener, ChangeEventSource, KeyListener, MouseListener, HasParentDirectory {
 

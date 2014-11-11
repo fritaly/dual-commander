@@ -1,4 +1,4 @@
-package fr.ritaly.dualcommander;
+package com.github.fritaly.dualcommander;
 
 import java.io.File;
 import java.util.Comparator;

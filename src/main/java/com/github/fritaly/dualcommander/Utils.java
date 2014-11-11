@@ -1,4 +1,4 @@
-package fr.ritaly.dualcommander;
+package com.github.fritaly.dualcommander;
 
 import java.awt.Color;
 import java.io.IOException;

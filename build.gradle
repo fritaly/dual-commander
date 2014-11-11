@@ -16,7 +16,7 @@ def releaseDate = new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss (Z)').form
 
 jar {
   manifest {
-    attributes += [ 'Main-Class': 'fr.ritaly.dualcommander.DualCommander' ]
+    attributes += [ 'Main-Class': 'com.github.fritaly.dualcommander.DualCommander' ]
 	attributes += [ 'Artifact-Group': "${project.group}" ]
 	attributes += [ 'Artifact-Name': "${project.name}" ]
 	attributes += [ 'Artifact-Version': "${project.version}" ]
