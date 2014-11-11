@@ -27,6 +27,11 @@ public final class UserPreferences {
 	private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
 	/**
+	 * The name associated to the {@link #showHidden} property.
+	 */
+	public static final String PROPERTY_SHOW_HIDDEN = "show.hidden";
+
+	/**
 	 * Whether hidden directories and files should be shown.
 	 */
 	private boolean showHidden = false;
@@ -45,13 +50,13 @@ public final class UserPreferences {
 	public void init(Preferences preferences) {
 		Validate.notNull(preferences, "The given preferences is null");
 
-		this.showHidden = preferences.getBoolean("show.hidden", false);
+		this.showHidden = preferences.getBoolean(PROPERTY_SHOW_HIDDEN, false);
 	}
 
 	public void saveState(Preferences preferences) {
 		Validate.notNull(preferences, "The given preferences is null");
 
-		preferences.putBoolean("show.hidden", this.showHidden);
+		preferences.putBoolean(PROPERTY_SHOW_HIDDEN, this.showHidden);
 	}
 
 	public boolean isShowHidden() {
@@ -64,7 +69,7 @@ public final class UserPreferences {
 		this.showHidden = showHidden;
 
 		if (oldValue != showHidden) {
-			this.changeSupport.firePropertyChange("showHidden", oldValue, showHidden);
+			this.changeSupport.firePropertyChange(PROPERTY_SHOW_HIDDEN, oldValue, showHidden);
 		}
 	}
 }
