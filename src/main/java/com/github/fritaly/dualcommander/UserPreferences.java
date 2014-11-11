@@ -1,13 +1,13 @@
 package com.github.fritaly.dualcommander;
 
-public final class ProgramPreferences {
+public final class UserPreferences {
 
 	/**
 	 * Whether hidden directories and files should be shown.
 	 */
 	private boolean showHidden = false;
 
-	public ProgramPreferences() {
+	public UserPreferences() {
 	}
 
 	public boolean isShowHidden() {
