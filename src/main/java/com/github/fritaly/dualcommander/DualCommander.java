@@ -38,6 +38,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -63,6 +64,20 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 		public AboutAction() {
 			super("About");
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JOptionPane.showMessageDialog(DualCommander.this, "Not implemented yet", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private final class PreferencesAction extends AbstractAction {
+
+		private static final long serialVersionUID = -4073587940746786910L;
+
+		public PreferencesAction() {
+			super("Preferences");
 		}
 
 		@Override
@@ -183,6 +198,8 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 	private final AboutAction aboutAction = new AboutAction();
 
+	private final PreferencesAction preferencesAction = new PreferencesAction();
+
 	private final ViewAction viewAction = new ViewAction();
 
 	private final EditAction editAction = new EditAction();
@@ -235,6 +252,8 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 		// Create a menu bar
 		final JMenu fileMenu = new JMenu("File");
+		fileMenu.add(new JMenuItem(preferencesAction));
+		fileMenu.add(new JSeparator());
 		fileMenu.add(new JMenuItem(quitAction));
 
 		final JMenu helpMenu = new JMenu("Help");
