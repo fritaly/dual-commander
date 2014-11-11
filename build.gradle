@@ -29,6 +29,8 @@ dependencies {
   compile 'com.jgoodies:jgoodies-looks:2.5.3'
   compile 'com.miglayout:miglayout:3.7.4'
   compile 'commons-lang:commons-lang:2.6'
+  compile 'log4j:log4j:1.2.17'
+
 }
 
 processResources {
