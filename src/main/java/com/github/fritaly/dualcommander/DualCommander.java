@@ -33,6 +33,9 @@ import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
@@ -54,6 +57,20 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 	// TODO Add icons for each action
 	// TODO Implement the actions F3 -> F8
+	private final class AboutAction extends AbstractAction {
+
+		private static final long serialVersionUID = -8972233122891491665L;
+
+		public AboutAction() {
+			super("About");
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JOptionPane.showMessageDialog(DualCommander.this, "Not implemented yet", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
 	private final class ViewAction extends AbstractAction {
 
 		private static final long serialVersionUID = -3885021368508066211L;
@@ -164,6 +181,8 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 	// --- Actions --- //
 
+	private final AboutAction aboutAction = new AboutAction();
+
 	private final ViewAction viewAction = new ViewAction();
 
 	private final EditAction editAction = new EditAction();
@@ -213,6 +232,19 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 		// Layout, columns & rows
 		setLayout(new MigLayout("insets 0px", "[grow]0px[grow]", "[grow][]"));
+
+		// Create a menu bar
+		final JMenu fileMenu = new JMenu("File");
+		fileMenu.add(new JMenuItem(quitAction));
+
+		final JMenu helpMenu = new JMenu("Help");
+		helpMenu.add(new JMenuItem(aboutAction));
+
+		final JMenuBar menuBar = new JMenuBar();
+		menuBar.add(fileMenu);
+		menuBar.add(helpMenu);
+
+		setJMenuBar(menuBar);
 
 		this.leftPane.addChangeListener(this);
 		this.leftPane.addKeyListener(this);
