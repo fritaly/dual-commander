@@ -21,6 +21,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.List;
 import java.util.prefs.BackingStoreException;
@@ -49,10 +51,13 @@ import net.miginfocom.swing.MigLayout;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 import com.jgoodies.looks.windows.WindowsLookAndFeel;
 
-public class DualCommander extends JFrame implements ChangeListener, WindowListener, KeyListener {
+public class DualCommander extends JFrame implements ChangeListener, WindowListener, KeyListener, PropertyChangeListener {
 
 	private static final long serialVersionUID = 5445919782222373150L;
 
@@ -194,6 +199,8 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		return button;
 	}
 
+	private final Logger logger = Logger.getLogger(this.getClass());
+
 	// --- Actions --- //
 
 	private final AboutAction aboutAction = new AboutAction();
@@ -316,6 +323,9 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		addWindowListener(this);
 		addKeyListener(this);
 
+		// Listen to preference change events
+		this.preferences.addPropertyChangeListener(this);
+
 		// Reload the last configuration and init the left & right panels accordingly
 		final Preferences prefs = Preferences.userNodeForPackage(this.getClass());
 
@@ -410,6 +420,11 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		if ((e.getModifiers() | KeyEvent.SHIFT_MASK) == KeyEvent.SHIFT_MASK) {
 			shiftPressed = true;
 		}
+
+		if ((e.getKeyChar() == 'h') || (e.getKeyChar() == 'H')) {
+			// Toggle the 'show hidden' flag (meant for tests)
+			this.preferences.setShowHidden(!this.preferences.isShowHidden());
+		}
 	}
 
 	@Override
@@ -423,7 +438,21 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 	public void keyTyped(KeyEvent e) {
 	}
 
+	@Override
+	public void propertyChange(PropertyChangeEvent e) {
+		if (e.getSource() == preferences) {
+			if (logger.isDebugEnabled()) {
+				logger.debug(String.format("User preference '%s' changed from %s to %s", e.getPropertyName(), e.getOldValue(),
+						e.getNewValue()));
+			}
+		}
+	}
+
 	public static void main(String[] args) {
+		BasicConfigurator.configure();
+
+		Logger.getRootLogger().setLevel(Level.DEBUG);
+
 		SwingUtilities.invokeLater(new Runnable() {
 
 			@Override
