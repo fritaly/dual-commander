@@ -144,7 +144,45 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JOptionPane.showMessageDialog(DualCommander.this, "Not implemented yet", "Error", JOptionPane.ERROR_MESSAGE);
+			// What's the active pane's file selection ?
+			final List<File> selection = activePane.getActiveBrowser().getSelection();
+
+			// Store the inactive pane before the active one loses the focus
+			final TabbedPane inactivePane = getInactivePane();
+
+			if (!selection.isEmpty()) {
+				// TODO Set icon on dialog boxes
+				final int reply = JOptionPane.showConfirmDialog(DualCommander.this,
+						String.format("Do you really want to move %d file(s)", selection.size()), "Please confirm",
+						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+				if (reply == JOptionPane.YES_OPTION) {
+					// Move the file(s)
+					// TODO Use a swing worker and a progress bar (if necessary)
+					final File targetDir = inactivePane.getActiveBrowser().getDirectory();
+
+					for (File file : selection) {
+						final String initialPath = file.getAbsolutePath();
+
+						// TODO Check whether the target file already exists or not
+						final File targetFile = new File(targetDir, file.getName());
+
+						file.renameTo(targetFile);
+
+						if (logger.isInfoEnabled()) {
+							logger.info(String.format("Moved file %s to directory %s", initialPath, targetDir.getAbsolutePath()));
+						}
+					}
+
+					// Refresh the 2 panes
+					leftPane.getActiveBrowser().refresh();
+					rightPane.getActiveBrowser().refresh();
+
+					if (logger.isInfoEnabled()) {
+						logger.info(String.format("Moved %d file(s)", selection.size()));
+					}
+				}
+			}
 		}
 	}
 
@@ -356,6 +394,21 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		if (logger.isInfoEnabled()) {
 			logger.info("UI initialized");
 		}
+	}
+
+	public TabbedPane getActivePane() {
+		return activePane;
+	}
+
+	public TabbedPane getInactivePane() {
+		if (getActivePane() == leftPane) {
+			return rightPane;
+		}
+		if (getActivePane() == rightPane) {
+			return leftPane;
+		}
+
+		return null;
 	}
 
 	private void refreshButtons(List<File> selection) {
