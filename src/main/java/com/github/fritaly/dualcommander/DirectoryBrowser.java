@@ -285,6 +285,16 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		if (e.getSource() == list) {
+			// The parent directory can't be selected
+			final File parentDir = getParentDirectory();
+
+			if (parentDir != null) {
+				if (getSelection().contains(parentDir)) {
+					// Unselect the parent directory entry (always the 1st one)
+					list.removeSelectionInterval(0, 0);
+				}
+			}
+
 			// Propagate the event
 			fireChangeEvent();
 		}
