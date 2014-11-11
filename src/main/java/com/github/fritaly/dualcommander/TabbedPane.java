@@ -26,10 +26,13 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.apache.commons.lang.Validate;
+import org.apache.log4j.Logger;
 
 public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListener {
 
 	private static final long serialVersionUID = 8522448669013461274L;
+
+	private final Logger logger = Logger.getLogger(this.getClass());
 
 	private final UserPreferences preferences;
 
@@ -54,6 +57,10 @@ public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListen
 
 		super.addTab(browser.getDirectory().getName(), browser);
 
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("Added new browser tab at index %d", getTabCount() - 1));
+		}
+
 		return browser;
 	}
 
@@ -62,7 +69,13 @@ public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListen
 		browser.removeChangeListener(this);
 		browser.removeKeyListener(this);
 
-		removeTabAt(getSelectedIndex());
+		final int index = getSelectedIndex();
+
+		removeTabAt(index);
+
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("Removed browser tab at index %d", index));
+		}
 	}
 
 	public DirectoryBrowser getActiveBrowser() {

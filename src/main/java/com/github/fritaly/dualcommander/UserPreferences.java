@@ -18,12 +18,14 @@ package com.github.fritaly.dualcommander;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.prefs.Preferences;
 
 import org.apache.commons.lang.Validate;
+import org.apache.log4j.Logger;
 
 public final class UserPreferences {
+
+	private final Logger logger = Logger.getLogger(this.getClass());
 
 	private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
@@ -78,6 +80,10 @@ public final class UserPreferences {
 
 		// The user preferences can be initialized only once
 		this.initialized = true;
+
+		if (logger.isInfoEnabled()) {
+			logger.info("Initialized user preferences");
+		}
 	}
 
 	public void saveState(Preferences preferences) {
@@ -86,6 +92,10 @@ public final class UserPreferences {
 		Validate.notNull(preferences, "The given preferences is null");
 
 		preferences.putBoolean(PROPERTY_SHOW_HIDDEN, this.showHidden);
+
+		if (logger.isInfoEnabled()) {
+			logger.info("Saved user preferences");
+		}
 	}
 
 	public boolean isShowHidden() {

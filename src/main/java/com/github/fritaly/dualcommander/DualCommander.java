@@ -51,7 +51,6 @@ import net.miginfocom.swing.MigLayout;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -249,6 +248,10 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		// TODO Generate a fat jar at build time
 		super(String.format("Dual Commander %s", Utils.getApplicationVersion()));
 
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("Dual Commander %s", Utils.getApplicationVersion()));
+		}
+
 		try {
 			// Apply the JGoodies L&F
 			UIManager.setLookAndFeel(new WindowsLookAndFeel());
@@ -329,15 +332,24 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		// Reload the last configuration and init the left & right panels accordingly
 		final Preferences prefs = Preferences.userNodeForPackage(this.getClass());
 
+		// The user preferences must be loaded first because they're needed to init the UI
 		this.preferences.init(prefs.node("user.preferences"));
 		this.leftPane.init(prefs.node("left.panel"));
 		this.rightPane.init(prefs.node("right.panel"));
+
+		if (logger.isInfoEnabled()) {
+			logger.info("Loaded preferences");
+		}
 
 		// Init the buttons
 		refreshButtons(this.leftPane.getActiveBrowser().getSelection());
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+		if (logger.isInfoEnabled()) {
+			logger.info("UI initialized");
+		}
 	}
 
 	private void refreshButtons(List<File> selection) {
@@ -386,6 +398,10 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 	@Override
 	public void windowClosing(WindowEvent e) {
 		try {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Saving preferences ...");
+			}
+
 			// Save the program state
 			final Preferences prefs = Preferences.userNodeForPackage(this.getClass());
 
@@ -394,6 +410,10 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 			this.preferences.saveState(prefs.node("user.preferences"));
 
 			prefs.sync();
+
+			if (logger.isInfoEnabled()) {
+				logger.info("Saved preferences");
+			}
 		} catch (BackingStoreException e1) {
 			// Not a big deal
 		}
@@ -419,6 +439,10 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 	public void keyPressed(KeyEvent e) {
 		if ((e.getModifiers() | KeyEvent.SHIFT_MASK) == KeyEvent.SHIFT_MASK) {
 			shiftPressed = true;
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("[Shift] key pressed");
+			}
 		}
 
 		if ((e.getKeyChar() == 'h') || (e.getKeyChar() == 'H')) {
@@ -431,6 +455,10 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 	public void keyReleased(KeyEvent e) {
 		if ((e.getModifiers() | KeyEvent.SHIFT_DOWN_MASK) == KeyEvent.SHIFT_DOWN_MASK) {
 			shiftPressed = false;
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("[Shift] key released");
+			}
 		}
 	}
 
@@ -442,19 +470,18 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 	public void propertyChange(PropertyChangeEvent e) {
 		if (e.getSource() == preferences) {
 			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("User preference '%s' changed from %s to %s", e.getPropertyName(), e.getOldValue(),
+				logger.debug(String.format("User preference '%s' changed: '%s' -> '%s'", e.getPropertyName(), e.getOldValue(),
 						e.getNewValue()));
 			}
 
 			// The 'show hidden' property changed, need to refresh the active directory browsers
+			// TODO Set a flag for the inactive directory browsers to refresh when they get the focus
 			this.leftPane.getActiveBrowser().refresh();
 			this.rightPane.getActiveBrowser().refresh();
 		}
 	}
 
 	public static void main(String[] args) {
-		BasicConfigurator.configure();
-
 		Logger.getRootLogger().setLevel(Level.DEBUG);
 
 		SwingUtilities.invokeLater(new Runnable() {
