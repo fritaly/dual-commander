@@ -26,6 +26,7 @@ import java.awt.event.WindowListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -51,6 +52,7 @@ import javax.swing.event.ChangeListener;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
@@ -130,7 +132,50 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JOptionPane.showMessageDialog(DualCommander.this, "Not implemented yet", "Error", JOptionPane.ERROR_MESSAGE);
+			// What's the active pane's file selection ?
+			final List<File> selection = activePane.getActiveBrowser().getSelection();
+
+			// Store the inactive pane before the active one loses the focus
+			final TabbedPane inactivePane = getInactivePane();
+
+			if (!selection.isEmpty()) {
+				// Copy the file(s)
+				// TODO Use a swing worker and a progress bar (if necessary)
+				final File targetDir = inactivePane.getActiveBrowser().getDirectory();
+
+				try {
+					for (File file : selection) {
+						// TODO Check whether the target file already exists or not
+
+						if (file.isFile()) {
+							FileUtils.copyFileToDirectory(file, targetDir, true);
+
+							if (logger.isInfoEnabled()) {
+								logger.info(String.format("Copied file %s to directory %s", file.getAbsolutePath(),
+										targetDir.getAbsolutePath()));
+							}
+						} else if (file.isDirectory()) {
+							FileUtils.copyDirectoryToDirectory(file, targetDir);
+
+							if (logger.isInfoEnabled()) {
+								logger.info(String.format("Copied directory %s to directory %s", file.getAbsolutePath(),
+										targetDir.getAbsolutePath()));
+							}
+						}
+					}
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(DualCommander.this, "An error occured when copying the file(s)", "Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
+
+				// Refresh the 2 panes
+				leftPane.getActiveBrowser().refresh();
+				rightPane.getActiveBrowser().refresh();
+
+				if (logger.isInfoEnabled()) {
+					logger.info(String.format("Copied %d file(s)", selection.size()));
+				}
+			}
 		}
 	}
 
