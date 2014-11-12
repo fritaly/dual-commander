@@ -390,11 +390,13 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		setJMenuBar(menuBar);
 
 		this.leftPane = new TabbedPane(preferences);
+		this.leftPane.setName("Left");
 		this.leftPane.addChangeListener(this);
 		this.leftPane.addKeyListener(this);
 		this.leftPane.addFocusListener(this);
 
 		this.rightPane = new TabbedPane(preferences);
+		this.rightPane.setName("Right");
 		this.rightPane.addChangeListener(this);
 		this.rightPane.addKeyListener(this);
 		this.rightPane.addFocusListener(this);
