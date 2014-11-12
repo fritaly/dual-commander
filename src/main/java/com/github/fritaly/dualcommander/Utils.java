@@ -63,6 +63,42 @@ public class Utils {
 		}
 	}
 
+	/**
+	 * Scans (i.e. recurses) into the given directory and notifies the file
+	 * handler on any file or directory found.
+	 *
+	 * @param directory
+	 *            the directory to scan. Can't be null. Must point to a
+	 *            directory, not a file.
+	 * @param handler
+	 *            a file handler to be notified of files / directories found.
+	 *            Can't be null.
+	 */
+	public static void scan(File directory, FileHandler handler) {
+		Validate.notNull(directory, "The given directory is null");
+		Validate.isTrue(directory.exists(), String.format("The given directory '%s' doesn't exist", directory.getAbsolutePath()));
+		Validate.isTrue(directory.isDirectory(), String.format("The given path '%s' doesn't denote a directory", directory.getAbsolutePath()));
+		Validate.notNull(handler, "The given file handler is null");
+
+		// Delegate to the non-validating recursive method
+		_scan(directory, handler);
+	}
+
+	// This private version of the method scan() is more efficient because it
+	// doesn't have to validate arguments (validation was done by the public
+	// method)
+	private static void _scan(File directory, FileHandler handler) {
+		for (File entry : directory.listFiles()) {
+			// Notify the file handler
+			handler.handle(directory);
+
+			if (entry.isDirectory()) {
+				// Recurse into the directory
+				scan(entry, handler);
+			}
+		}
+	}
+
 	public static Color getDefaultBackgroundColor() {
 		return new JLabel().getBackground();
 	}
