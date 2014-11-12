@@ -168,9 +168,8 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 							JOptionPane.ERROR_MESSAGE);
 				}
 
-				// Refresh the 2 panes
-				leftPane.getActiveBrowser().refresh();
-				rightPane.getActiveBrowser().refresh();
+				// Refresh the target panel (the inactive one)
+				inactivePane.getActiveBrowser().refresh();
 
 				if (logger.isInfoEnabled()) {
 					logger.info(String.format("Copied %d file(s)", selection.size()));
@@ -199,7 +198,7 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 				// TODO Set icon on dialog boxes
 				final int reply = JOptionPane.showConfirmDialog(DualCommander.this,
 						String.format("Do you really want to move %d file(s)", selection.size()), "Please confirm",
-						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+						JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
 				if (reply == JOptionPane.YES_OPTION) {
 					// Move the file(s)
@@ -255,7 +254,33 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JOptionPane.showMessageDialog(DualCommander.this, "Not implemented yet", "Error", JOptionPane.ERROR_MESSAGE);
+			// What's the active pane's file selection ?
+			final List<File> selection = activePane.getActiveBrowser().getSelection();
+
+			// Store the active pane before it loses the focus
+			final TabbedPane activePane = getActivePane();
+
+			if (!selection.isEmpty()) {
+				// TODO Set icon on dialog boxes
+				final int reply = JOptionPane.showConfirmDialog(DualCommander.this,
+						String.format("Do you really want to delete %d file(s)", selection.size()), "Please confirm",
+						JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+				if (reply == JOptionPane.YES_OPTION) {
+					// Delete the file(s)
+					// TODO Use a swing worker and a progress bar (if necessary)
+					for (File file : selection) {
+						Utils.deleteRecursively(file, null);
+					}
+
+					// Refresh the source panel (the active one)
+					activePane.getActiveBrowser().refresh();
+
+					if (logger.isInfoEnabled()) {
+						logger.info(String.format("Deleted %d file(s)", selection.size()));
+					}
+				}
+			}
 		}
 	}
 
