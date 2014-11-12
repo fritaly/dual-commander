@@ -36,21 +36,19 @@ import javax.swing.JLabel;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.Validate;
 
-import com.github.fritaly.dualcommander.event.FileListener;
-
 public class Utils {
 
 	/**
 	 * Recursively deletes the given file or directory and notifies the provided
-	 * listener when a file / directory has been deleted.
+	 * handler when a file / directory has been deleted.
 	 *
 	 * @param file
 	 *            the file / directory to delete. Can't be null.
-	 * @param listener
+	 * @param handler
 	 *            a possible listener to be notified of file deletions. Can be
 	 *            null.
 	 */
-	public static void deleteRecursively(File file, FileListener listener) {
+	public static void deleteRecursively(File file, FileHandler handler) {
 		// The given file can be a file or a directory
 		// The given listener can be null
 		Validate.notNull(file, "The given file is null");
@@ -58,15 +56,15 @@ public class Utils {
 		if (file.isDirectory()) {
 			// Delete the directory recursively
 			for (File entry : file.listFiles()) {
-				deleteRecursively(entry, listener);
+				deleteRecursively(entry, handler);
 			}
 		}
 
 		// Delete the file or the empty directory
 		file.delete();
 
-		if (listener != null) {
-			listener.fileDeleted(file);
+		if (handler != null) {
+			handler.handle(file);
 		}
 	}
 
@@ -97,13 +95,13 @@ public class Utils {
 	// method)
 	private static void _scan(File directory, FileHandler handler) {
 		for (File entry : directory.listFiles()) {
-			// Notify the file handler
-			handler.handle(directory);
-
 			if (entry.isDirectory()) {
 				// Recurse into the directory
 				scan(entry, handler);
 			}
+
+			// Notify the file handler
+			handler.handle(directory);
 		}
 	}
 
