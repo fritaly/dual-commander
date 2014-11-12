@@ -36,7 +36,6 @@ import javax.swing.JLabel;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.Validate;
 
-import com.github.fritaly.dualcommander.event.FileEvent;
 import com.github.fritaly.dualcommander.event.FileListener;
 
 public class Utils {
@@ -67,7 +66,7 @@ public class Utils {
 		file.delete();
 
 		if (listener != null) {
-			listener.fileDeleted(new FileEvent(file));
+			listener.fileDeleted(file);
 		}
 	}
 

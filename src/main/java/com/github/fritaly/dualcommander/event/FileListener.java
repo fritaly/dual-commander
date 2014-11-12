@@ -16,7 +16,9 @@
  */
 package com.github.fritaly.dualcommander.event;
 
+import java.io.File;
+
 public interface FileListener {
 
-	public void fileDeleted(FileEvent e);
+	public void fileDeleted(File file);
 }
