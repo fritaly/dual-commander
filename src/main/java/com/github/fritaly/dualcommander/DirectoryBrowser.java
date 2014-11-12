@@ -263,6 +263,10 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 			}
 		}
 
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("[%s] Set directory to %s", getComponentLabel(), directory.getAbsolutePath()));
+		}
+
 		// Fire an event to ensure listeners are notified of the directory
 		// change
 		fireChangeEvent();
@@ -295,6 +299,10 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 				}
 			}
 
+			if (logger.isDebugEnabled()) {
+				logger.debug(String.format("[%s] Selection changed", getComponentLabel()));
+			}
+
 			// Propagate the event
 			fireChangeEvent();
 		}
@@ -302,6 +310,10 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 
 	public List<File> getSelection() {
 		return this.list.getSelectedValuesList();
+	}
+
+	private String getComponentLabel() {
+		return (getName() == null) ? "N/A" : getName();
 	}
 
 	@Override

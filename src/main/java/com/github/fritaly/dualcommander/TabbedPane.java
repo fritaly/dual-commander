@@ -58,6 +58,12 @@ public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListen
 		browser.addKeyListener(this);
 		browser.addFocusListener(this);
 
+		if (getName() != null) {
+			// Set a distinctive name to each instance to distinguish their logs
+			// The tab hasn't yet been added so we need to compute its future index
+			browser.setName(String.format("%s:%d", getName(), getTabCount()));
+		}
+
 		super.addTab(browser.getDirectory().getName(), browser);
 
 		if (logger.isInfoEnabled()) {
