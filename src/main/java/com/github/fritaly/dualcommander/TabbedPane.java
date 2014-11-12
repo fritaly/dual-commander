@@ -61,7 +61,7 @@ public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListen
 		super.addTab(browser.getDirectory().getName(), browser);
 
 		if (logger.isInfoEnabled()) {
-			logger.info(String.format("Added new browser tab at index %d", getTabCount() - 1));
+			logger.info(String.format("[%s] Added new browser tab at index %d", getComponentLabel(), getTabCount() - 1));
 		}
 
 		return browser;
@@ -78,7 +78,7 @@ public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListen
 		removeTabAt(index);
 
 		if (logger.isInfoEnabled()) {
-			logger.info(String.format("Removed browser tab at index %d", index));
+			logger.info(String.format("[%s] Removed browser tab at index %d", getComponentLabel(), index));
 		}
 	}
 
@@ -198,5 +198,9 @@ public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListen
 		for (int i = 0; i < getTabCount(); i++) {
 			preferences.put(String.format("tab.%d.directory", i), getBrowserAt(i).getDirectory().getAbsolutePath());
 		}
+	}
+
+	private String getComponentLabel() {
+		return (getName() == null) ? "N/A" : getName();
 	}
 }
