@@ -101,7 +101,7 @@ public class Utils {
 			}
 
 			// Notify the file handler
-			handler.handle(directory);
+			handler.handle(entry);
 		}
 	}
 
