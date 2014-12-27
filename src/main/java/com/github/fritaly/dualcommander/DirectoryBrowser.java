@@ -44,11 +44,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.border.BevelBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import net.miginfocom.swing.MigLayout;
@@ -224,6 +226,21 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		}
 	}
 
+	private static class TableHeaderRenderer extends JLabel implements TableCellRenderer {
+
+		private static final long serialVersionUID = 596061491019164527L;
+
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
+				int column) {
+
+			setText(value.toString());
+			setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+
+			return this;
+		}
+	}
+
 	private static String getCanonicalPath(File file) {
 		try {
 			return file.getCanonicalPath();
@@ -286,6 +303,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		// Render the table headers with a bold font
 		this.table.getTableHeader().setFont(Utils.getBoldFont(this.table.getTableHeader().getFont()));
 		this.table.getTableHeader().setBackground(Color.decode("#CCCCCC"));
+		this.table.getTableHeader().setDefaultRenderer(new TableHeaderRenderer());
 
 		final TableColumn fileColumn = this.table.getColumn(FileTableModel.COLUMN_NAME);
 		fileColumn.setCellRenderer(new FileTableCellRenderer());
