@@ -167,9 +167,9 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 
 			final JLabel component = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-			final Long lastUpdate = (Long) value;
+			final File file = (File) value;
 
-			component.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(lastUpdate)));
+			component.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(file.lastModified())));
 
 			if (isSelected) {
 				setBackground((row % 2 == 0) ? Color.decode("#FFC57A") : Color.decode("#F5AC4C"));

@@ -133,9 +133,8 @@ public class FileTableModel implements TableModel {
 		switch (columnIndex) {
 		case 0:
 		case 1:
-			return File.class;
 		case 2:
-			return Long.class;
+			return File.class;
 		default:
 			throw new IllegalArgumentException(String.format("Invalid column index: %d", columnIndex));
 		}
@@ -172,9 +171,8 @@ public class FileTableModel implements TableModel {
 		switch (columnIndex) {
 		case 0:
 		case 1:
-			return file;
 		case 2:
-			return new Long(file.lastModified());
+			return file;
 		default:
 			throw new IllegalArgumentException(String.format("Invalid column index: %d", columnIndex));
 		}
