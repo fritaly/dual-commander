@@ -557,8 +557,23 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 			final int columnIndex = table.convertColumnIndexToModel(table.columnAtPoint(e.getPoint()));
 
 			if (columnIndex >= 0) {
-				// TODO React to clicks on column headers
-				System.err.println("Clicked on column header " + columnIndex);
+				// React to clicks on column headers and sort the entries accordingly
+				switch(columnIndex) {
+				case 0:
+					tableModel.setSortCriteria(SortCriteria.TYPE);
+					break;
+				case 1:
+					tableModel.setSortCriteria(SortCriteria.NAME);
+					break;
+				case 2:
+					tableModel.setSortCriteria(SortCriteria.SIZE);
+					break;
+				case 3:
+					tableModel.setSortCriteria(SortCriteria.LAST_UPDATE);
+					break;
+				default:
+					throw new UnsupportedOperationException("Unsupported column index: " + columnIndex);
+				}
 			}
 		}
 	}

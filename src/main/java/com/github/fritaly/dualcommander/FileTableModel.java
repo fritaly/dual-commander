@@ -19,7 +19,6 @@ package com.github.fritaly.dualcommander;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.event.EventListenerList;
@@ -53,7 +52,7 @@ public class FileTableModel implements TableModel {
 	/**
 	 * Comparator used for sorting the directories & files.
 	 */
-	private final Comparator<File> comparator;
+	private final ConfigurableFileComparator comparator;
 
 	/**
 	 * List of listeners to be notified upon change.
@@ -63,8 +62,7 @@ public class FileTableModel implements TableModel {
 	public FileTableModel(HasParentDirectory delegate) {
 		Validate.notNull(delegate, "The given object is null");
 
-		// this.comparator = new FileComparator(delegate);
-		this.comparator = new SimpleFileComparator(delegate);
+		this.comparator = new ConfigurableFileComparator(delegate);
 	}
 
 	public void clear() {
@@ -79,6 +77,22 @@ public class FileTableModel implements TableModel {
 
 	public void sort() {
 		Collections.sort(list, comparator);
+	}
+
+	public SortCriteria getSortCriteria() {
+		return comparator.getCriteria();
+	}
+
+	public void setSortCriteria(SortCriteria criteria) {
+		Validate.notNull(criteria, "The given criteria is null");
+
+		comparator.setCriteria(criteria);
+
+		// Sort the entries
+		sort();
+
+		// Notify the listeners
+		fireTableDataChanged();
 	}
 
 	@Override
