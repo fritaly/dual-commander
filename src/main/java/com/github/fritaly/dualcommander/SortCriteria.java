@@ -56,9 +56,12 @@ public enum SortCriteria implements Comparator<File> {
 	SIZE {
 		@Override
 		public int compare(File f1, File f2) {
-			if (f1.length() < f2.length()) {
+			final long size1 = f1.isDirectory() ? 0 : f1.length();
+			final long size2 = f2.isDirectory() ? 0 : f2.length();
+
+			if (size1 < size2) {
 				return -1;
-			} else if (f1.length() > f2.length()) {
+			} else if (size1 > size2) {
 				return +1;
 			}
 
