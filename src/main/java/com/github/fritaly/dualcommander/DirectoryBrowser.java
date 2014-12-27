@@ -304,6 +304,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		this.table.getTableHeader().setFont(Utils.getBoldFont(this.table.getTableHeader().getFont()));
 		this.table.getTableHeader().setBackground(Color.decode("#CCCCCC"));
 		this.table.getTableHeader().setDefaultRenderer(new TableHeaderRenderer());
+		this.table.getTableHeader().addMouseListener(this);
 
 		final TableColumn fileColumn = this.table.getColumn(FileTableModel.COLUMN_NAME);
 		fileColumn.setCellRenderer(new FileTableCellRenderer());
@@ -512,6 +513,13 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 						setDirectory(file);
 					}
 				}
+			}
+		} else if (e.getSource() == table.getTableHeader()) {
+			final int columnIndex = table.convertColumnIndexToModel(table.columnAtPoint(e.getPoint()));
+
+			if (columnIndex >= 0) {
+				// TODO React to clicks on column headers
+				System.err.println("Clicked on column header " + columnIndex);
 			}
 		}
 	}
