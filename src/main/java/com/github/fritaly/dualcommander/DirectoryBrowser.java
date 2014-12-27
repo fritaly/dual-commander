@@ -119,6 +119,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 			final Long fileSize = (Long) value;
 
 			component.setText(String.format("%d", fileSize));
+			component.setHorizontalAlignment(JLabel.RIGHT);
 
 			if (isSelected) {
 				setBackground((row % 2 == 0) ? Color.decode("#FFC57A") : Color.decode("#F5AC4C"));
@@ -257,6 +258,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 
 		// Render the table headers with a bold font
 		this.table.getTableHeader().setFont(Utils.getBoldFont(this.table.getTableHeader().getFont()));
+		this.table.getTableHeader().setBackground(Color.decode("#CCCCCC"));
 
 		final TableColumn fileColumn = this.table.getColumn(FileTableModel.COLUMN_NAME);
 		fileColumn.setCellRenderer(new FileTableCellRenderer());
@@ -276,7 +278,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		add(directoryButton, "grow, span");
 		add(new JScrollPane(table), "grow");
 
-		// Set the directory (this will populate the list)
+		// Set the directory (this will populate the table)
 		setDirectory(directory);
 	}
 
