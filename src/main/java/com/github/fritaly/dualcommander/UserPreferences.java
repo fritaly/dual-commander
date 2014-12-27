@@ -47,6 +47,22 @@ public final class UserPreferences {
 	public UserPreferences() {
 	}
 
+	// Copy constructor
+	public UserPreferences(UserPreferences preferences) {
+		Validate.notNull(preferences, "The given user preferences is null");
+
+		this.showHidden = preferences.isShowHidden();
+
+		// The user preferences can be initialized only once
+		this.initialized = true;
+	}
+
+	public void apply(UserPreferences preferences) {
+		Validate.notNull(preferences, "The given user preferences is null");
+
+		setShowHidden(preferences.isShowHidden());
+	}
+
 	private void assertInitialized() {
 		if (!isInitialized()) {
 			throw new IllegalStateException("The user preferences haven't been initialized");

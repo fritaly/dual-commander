@@ -90,7 +90,17 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JOptionPane.showMessageDialog(DualCommander.this, "Not implemented yet", "Error", JOptionPane.ERROR_MESSAGE);
+			final UserPreferencesPanel panel = new UserPreferencesPanel(getPreferences());
+
+			final int option = JOptionPane.showOptionDialog(DualCommander.this, panel, "Preferences", JOptionPane.YES_NO_OPTION,
+					JOptionPane.PLAIN_MESSAGE, null, new Object[] { "Apply", "Cancel" }, "Cancel");
+
+			if (option == JOptionPane.YES_OPTION) {
+				// User clicked on "Apply"
+				getPreferences().apply(panel.getPreferences());
+			} else {
+				// Dialog was closed or user clicked on "Cancel"
+			}
 		}
 	}
 
@@ -145,7 +155,8 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 				try {
 					for (File file : selection) {
-						// TODO Check whether the target file already exists or not
+						// TODO Check whether the target file already exists or
+						// not
 
 						if (file.isFile()) {
 							FileUtils.copyFileToDirectory(file, targetDir, true);
@@ -208,7 +219,8 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 					for (File file : selection) {
 						final String initialPath = file.getAbsolutePath();
 
-						// TODO Check whether the target file already exists or not
+						// TODO Check whether the target file already exists or
+						// not
 						final File targetFile = new File(targetDir, file.getName());
 
 						file.renameTo(targetFile);
@@ -445,10 +457,12 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		// Listen to preference change events
 		this.preferences.addPropertyChangeListener(this);
 
-		// Reload the last configuration and init the left & right panels accordingly
+		// Reload the last configuration and init the left & right panels
+		// accordingly
 		final Preferences prefs = Preferences.userNodeForPackage(this.getClass());
 
-		// The user preferences must be loaded first because they're needed to init the UI
+		// The user preferences must be loaded first because they're needed to
+		// init the UI
 		this.preferences.init(prefs.node("user.preferences"));
 		this.leftPane.init(prefs.node("left.panel"));
 		this.rightPane.init(prefs.node("right.panel"));
@@ -576,11 +590,6 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 				logger.debug("[Shift] key pressed");
 			}
 		}
-
-		if ((e.getKeyChar() == 'h') || (e.getKeyChar() == 'H')) {
-			// Toggle the 'show hidden' flag (meant for tests)
-			this.preferences.setShowHidden(!this.preferences.isShowHidden());
-		}
 	}
 
 	@Override
@@ -640,8 +649,10 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 						e.getNewValue()));
 			}
 
-			// The 'show hidden' property changed, need to refresh the active directory browsers
-			// TODO Set a flag for the inactive directory browsers to refresh when they get the focus
+			// The 'show hidden' property changed, need to refresh the active
+			// directory browsers
+			// TODO Set a flag for the inactive directory browsers to refresh
+			// when they get the focus
 			this.leftPane.getActiveBrowser().refresh();
 			this.rightPane.getActiveBrowser().refresh();
 		}
