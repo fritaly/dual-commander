@@ -327,7 +327,7 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		private static final long serialVersionUID = 388422465301643805L;
 
 		public QuitAction() {
-			super("Alt+F4 Quit");
+			super("Alt+F4 Quit", Icons.DOOR_OPEN_ICON);
 		}
 
 		@Override

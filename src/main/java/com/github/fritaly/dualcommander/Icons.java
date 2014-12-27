@@ -62,4 +62,6 @@ public final class Icons {
 	public static final ImageIcon CUT_ICON = getIcon("cut.png");
 
 	public static final ImageIcon ADD_ICON = getIcon("add.png");
+
+	public static final ImageIcon DOOR_OPEN_ICON = getIcon("door_open.png");
 }
