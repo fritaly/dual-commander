@@ -37,6 +37,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -166,10 +167,9 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 
 	private File directory;
 
-	private final SortedListModel<File> listModel;
+	private final FileTableModel tableModel;
 
-	// TODO Replace the JList by a sortable JTable
-	private final JList<File> list;
+	private final JTable table;
 
 	private final JButton directoryButton = new JButton(Icons.FOLDER_ICON);
 
@@ -188,21 +188,22 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		// Layout, columns & rows
 		setLayout(new MigLayout("insets 0px", "[grow]", "[][grow]"));
 
-		this.listModel = new SortedListModel<File>(new FileComparator(this));
+		this.tableModel = new FileTableModel(this);
 
-		this.list = new JList<>(listModel);
-		this.list.setBackground(Utils.getDefaultBackgroundColor());
-		this.list.setCellRenderer(new FileListCellRenderer());
-		this.list.addListSelectionListener(this);
-		this.list.addKeyListener(this);
-		this.list.addMouseListener(this);
-		this.list.addFocusListener(this);
+		this.table = new JTable(tableModel);
+		this.table.getColumn("File").setCellRenderer(new FileTableCellRenderer());
+		this.table.setBackground(Utils.getDefaultBackgroundColor());
+		this.table.addKeyListener(this);
+		this.table.addMouseListener(this);
+		this.table.addFocusListener(this);
+		this.table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		this.table.getSelectionModel().addListSelectionListener(this);
 
 		this.directoryButton.setFocusable(false);
 		this.directoryButton.setHorizontalAlignment(SwingConstants.LEFT);
 
 		add(directoryButton, "grow, span");
-		add(new JScrollPane(list), "grow");
+		add(new JScrollPane(table), "grow");
 
 		// Set the directory (this will populate the list)
 		setDirectory(directory);
@@ -237,12 +238,12 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		// Display the (normalized) canonical path
 		directoryButton.setText(getCanonicalPath(directory));
 
-		this.listModel.clear();
+		this.tableModel.clear();
 
 		// Populate the list with the directory's entries
 		for (File file : directory.listFiles()) {
 			if (!file.isHidden() || preferences.isShowHidden()) {
-				listModel.add(file);
+				tableModel.add(file);
 			}
 		}
 
@@ -250,16 +251,24 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		final File parentDir = getCanonicalFile(directory).getParentFile();
 
 		if ((parentDir != null) && parentDir.exists()) {
-			listModel.add(parentDir);
+			tableModel.add(parentDir);
 		}
 
-		if ((oldDir != null) && listModel.contains(oldDir)) {
+		// Sort the entries
+		tableModel.sort();
+
+		// Notify the listeners that all the entries changed
+		tableModel.fireTableDataChanged();
+
+		if ((oldDir != null) && tableModel.contains(oldDir)) {
 			// Auto-select the directory we just left
-			list.setSelectedValue(oldDir, true);
+			final int index = tableModel.indexOf(oldDir);
+
+			table.getSelectionModel().setSelectionInterval(index, index);
 		} else {
 			// Auto-select the 1st entry (if there's one)
-			if (listModel.getSize() > 1) {
-				list.setSelectedIndex(1);
+			if (tableModel.size() > 1) {
+				table.getSelectionModel().setSelectionInterval(1, 1);
 			}
 		}
 
@@ -288,14 +297,14 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		if (e.getSource() == list) {
+		if (e.getSource() == table.getSelectionModel()) {
 			// The parent directory can't be selected
 			final File parentDir = getParentDirectory();
 
 			if (parentDir != null) {
 				if (getSelection().contains(parentDir)) {
 					// Unselect the parent directory entry (always the 1st one)
-					list.removeSelectionInterval(0, 0);
+					table.getSelectionModel().removeSelectionInterval(0, 0);
 				}
 			}
 
@@ -309,7 +318,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 	}
 
 	public List<File> getSelection() {
-		return this.list.getSelectedValuesList();
+		return tableModel.getFilesAt(table.getSelectedRows());
 	}
 
 	private String getComponentLabel() {
@@ -318,7 +327,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (e.getSource() != list) {
+		if (e.getSource() != table) {
 			return;
 		}
 
@@ -350,7 +359,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		if (e.getSource() != list) {
+		if (e.getSource() != table) {
 			return;
 		}
 
@@ -361,7 +370,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		if (e.getSource() != list) {
+		if (e.getSource() != table) {
 			return;
 		}
 
@@ -372,7 +381,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if (e.getSource() == this.list) {
+		if (e.getSource() == table) {
 			if (e.getClickCount() == 2) {
 				// Only react to double clicks
 				final List<File> selection = getSelection();
@@ -407,7 +416,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 
 	@Override
 	public void focusGained(FocusEvent e) {
-		if (e.getSource() == list) {
+		if (e.getSource() == table) {
 			// Propagate the event
 			final FocusListener[] listeners = getListeners(FocusListener.class);
 
@@ -423,7 +432,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 
 	@Override
 	public void focusLost(FocusEvent e) {
-		if (e.getSource() == list) {
+		if (e.getSource() == table) {
 			// Propagate the event
 			final FocusListener[] listeners = getListeners(FocusListener.class);
 
