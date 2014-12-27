@@ -38,5 +38,28 @@ public final class Icons {
 
 	public static final ImageIcon DELETE_ICON = getIcon("delete.png");
 
+	// TODO Test icon "pencil.png"
 	public static final ImageIcon EDIT_ICON = getIcon("page_edit.png");
+
+	public static final ImageIcon TICK_ICON = getIcon("tick.png");
+
+	public static final ImageIcon FIRST_ICON = getIcon("resultset_first.png");
+
+	public static final ImageIcon LAST_ICON = getIcon("resultset_last.png");
+
+	public static final ImageIcon NEXT_ICON = getIcon("resultset_next.png");
+
+	public static final ImageIcon PREVIOUS_ICON = getIcon("resultset_previous.png");
+
+	public static final ImageIcon INFORMATION_ICON = getIcon("information.png");
+
+	public static final ImageIcon EXCLAMATION_ICON = getIcon("exclamation.png");
+
+	public static final ImageIcon ERROR_ICON = getIcon("error.png");
+
+	public static final ImageIcon DRIVE_ICON = getIcon("drive.png");
+
+	public static final ImageIcon CUT_ICON = getIcon("cut.png");
+
+	public static final ImageIcon ADD_ICON = getIcon("add.png");
 }
