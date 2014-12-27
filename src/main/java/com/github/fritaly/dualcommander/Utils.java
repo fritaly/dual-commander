@@ -28,6 +28,7 @@ import java.nio.channels.FileChannel;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -38,6 +39,33 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.Validate;
 
 public class Utils {
+
+	private static class NegatingComparator<T> implements Comparator<T> {
+
+		private final Comparator<T> decorated;
+
+		NegatingComparator(Comparator<T> decorated) {
+			Validate.notNull(decorated, "The given comparator is null");
+
+			this.decorated = decorated;
+		}
+
+		@Override
+		public int compare(T o1, T o2) {
+			// Swap the 2 arguments
+			return decorated.compare(o2, o1);
+		}
+	}
+
+	public static <T> Comparator<T> negate(Comparator<T> comparator) {
+		Validate.notNull(comparator, "The given comparator is null");
+
+		if (comparator instanceof NegatingComparator) {
+			return ((NegatingComparator<T>) comparator).decorated;
+		}
+
+		return new NegatingComparator<T>(comparator);
+	}
 
 	/**
 	 * Recursively deletes the given file or directory and notifies the provided
