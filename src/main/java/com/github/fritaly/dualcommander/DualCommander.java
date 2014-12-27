@@ -17,6 +17,7 @@
 package com.github.fritaly.dualcommander;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
@@ -34,9 +35,11 @@ import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ActionMap;
+import javax.swing.Icon;
 import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -88,18 +91,41 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 			super("Preferences");
 		}
 
+		public JButton getButton(final JOptionPane optionPane, String text, Icon icon) {
+			final JButton button = new JButton(text, icon);
+			button.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent actionEvent) {
+					optionPane.setValue(button.getText());
+				}
+			});
+
+			return button;
+		}
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			final UserPreferencesPanel panel = new UserPreferencesPanel(getPreferences());
 
-			final int option = JOptionPane.showOptionDialog(DualCommander.this, panel, "Preferences", JOptionPane.YES_NO_OPTION,
-					JOptionPane.PLAIN_MESSAGE, null, new Object[] { "Apply", "Cancel" }, "Cancel");
+			final JOptionPane optionPane = new JOptionPane();
+		    optionPane.setMessage(panel);
+		    optionPane.setMessageType(JOptionPane.PLAIN_MESSAGE);
+		    optionPane.setOptionType(JOptionPane.YES_NO_OPTION);
 
-			if (option == JOptionPane.YES_OPTION) {
+			final JButton applyButton = getButton(optionPane, "Apply", Icons.ACCEPT_ICON);
+			final JButton cancelButton = getButton(optionPane, "Cancel", Icons.CANCEL_ICON);
+
+		    optionPane.setOptions(new Object[] { applyButton, cancelButton });
+
+		    final JDialog dialog = optionPane.createDialog(DualCommander.this, "Preferences");
+		    dialog.setVisible(true);
+
+			final Object value = optionPane.getValue();
+
+			if ("Apply".equals(value)) {
 				// User clicked on "Apply"
 				getPreferences().apply(panel.getPreferences());
 			} else {
-				// Dialog was closed or user clicked on "Cancel"
+				// User clicked "Cancel" or closed the dialog
 			}
 		}
 	}

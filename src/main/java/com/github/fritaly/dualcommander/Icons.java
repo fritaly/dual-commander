@@ -25,4 +25,8 @@ public final class Icons {
 	}
 
 	public static final ImageIcon FOLDER_ICON = getIcon("folder.png");
+
+	public static final ImageIcon ACCEPT_ICON = getIcon("accept.png");
+
+	public static final ImageIcon CANCEL_ICON = getIcon("cancel.png");
 }
