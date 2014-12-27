@@ -130,8 +130,8 @@ public class FileTableModel implements TableModel {
 	public Class<?> getColumnClass(int columnIndex) {
 		switch (columnIndex) {
 		case 0:
-			return File.class;
 		case 1:
+			return File.class;
 		case 2:
 			return Long.class;
 		default:
@@ -169,9 +169,8 @@ public class FileTableModel implements TableModel {
 
 		switch (columnIndex) {
 		case 0:
-			return file;
 		case 1:
-			return new Long(file.length());
+			return file;
 		case 2:
 			return new Long(file.lastModified());
 		default:

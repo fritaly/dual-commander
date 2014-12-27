@@ -129,11 +129,15 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 
 			final JLabel component = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-			final Long fileSize = (Long) value;
+			final File file = (File) value;
 
-			// Render the file sizes with ' ' as grouping separator
-			component.setText(decimalFormat.format(fileSize));
-			component.setHorizontalAlignment(JLabel.RIGHT);
+			if (file.isFile()) {
+				// Render the file sizes with ' ' as grouping separator
+				component.setText(decimalFormat.format(file.length()));
+				component.setHorizontalAlignment(JLabel.RIGHT);
+			} else {
+				component.setText("");
+			}
 
 			if (isSelected) {
 				setBackground((row % 2 == 0) ? Color.decode("#FFC57A") : Color.decode("#F5AC4C"));
