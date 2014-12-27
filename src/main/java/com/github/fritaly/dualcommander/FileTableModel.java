@@ -86,7 +86,13 @@ public class FileTableModel implements TableModel {
 	public void setSortCriteria(SortCriteria criteria) {
 		Validate.notNull(criteria, "The given criteria is null");
 
-		comparator.setCriteria(criteria);
+		if (criteria.equals(comparator.getCriteria())) {
+			// Change the sort order
+			comparator.setAscending(!comparator.isAscending());
+		} else {
+			// Change the sort criteria
+			comparator.setCriteria(criteria);
+		}
 
 		// Sort the entries
 		sort();

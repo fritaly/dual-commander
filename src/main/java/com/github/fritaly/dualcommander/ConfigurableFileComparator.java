@@ -27,6 +27,8 @@ public final class ConfigurableFileComparator implements Comparator<File> {
 
 	private SortCriteria criteria = SortCriteria.NAME;
 
+	private boolean ascending;
+
 	public ConfigurableFileComparator(HasParentDirectory delegate) {
 		Validate.notNull(delegate, "The given delegate is null");
 
@@ -39,6 +41,14 @@ public final class ConfigurableFileComparator implements Comparator<File> {
 
 		this.delegate = delegate;
 		this.criteria = criteria;
+	}
+
+	public boolean isAscending() {
+		return ascending;
+	}
+
+	public void setAscending(boolean ascending) {
+		this.ascending = ascending;
 	}
 
 	public SortCriteria getCriteria() {
@@ -62,6 +72,8 @@ public final class ConfigurableFileComparator implements Comparator<File> {
 		}
 
 		// Compare the 2 files according to the current sort criteria
-		return criteria.compare(f1, f2);
+		final int result = criteria.compare(f1, f2);
+
+		return ascending ? result : -1 * result;
 	}
 }
