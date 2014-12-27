@@ -36,6 +36,12 @@ import org.apache.commons.lang.Validate;
  */
 public class FileTableModel implements TableModel {
 
+	public static final String COLUMN_NAME = "Name";
+
+	public static final String COLUMN_SIZE = "Size";
+
+	public static final String COLUMN_LAST_UPDATE = "Last Update";
+
 	/**
 	 * The list containing the files being browsed.
 	 */
@@ -126,6 +132,7 @@ public class FileTableModel implements TableModel {
 		case 0:
 			return File.class;
 		case 1:
+		case 2:
 			return Long.class;
 		default:
 			throw new IllegalArgumentException(String.format("Invalid column index: %d", columnIndex));
@@ -134,16 +141,18 @@ public class FileTableModel implements TableModel {
 
 	@Override
 	public int getColumnCount() {
-		return 2;
+		return 3;
 	}
 
 	@Override
 	public String getColumnName(int columnIndex) {
 		switch (columnIndex) {
 		case 0:
-			return "File";
+			return COLUMN_NAME;
 		case 1:
-			return "Size";
+			return COLUMN_SIZE;
+		case 2:
+			return COLUMN_LAST_UPDATE;
 		default:
 			throw new IllegalArgumentException(String.format("Invalid column index: %d", columnIndex));
 		}
@@ -163,6 +172,8 @@ public class FileTableModel implements TableModel {
 			return file;
 		case 1:
 			return new Long(file.length());
+		case 2:
+			return new Long(file.lastModified());
 		default:
 			throw new IllegalArgumentException(String.format("Invalid column index: %d", columnIndex));
 		}

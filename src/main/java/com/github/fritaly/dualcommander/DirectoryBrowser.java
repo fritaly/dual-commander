@@ -27,6 +27,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -117,6 +119,33 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 			final Long fileSize = (Long) value;
 
 			component.setText(String.format("%d", fileSize));
+
+			if (isSelected) {
+				setBackground((row % 2 == 0) ? Color.decode("#FFC57A") : Color.decode("#F5AC4C"));
+			} else {
+				setBackground((row % 2 == 0) ? EVEN_ROW : ODD_ROW);
+			}
+
+			setForeground(Color.decode("#555555"));
+			setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+
+			return component;
+		}
+	}
+
+	private final class LastUpdateTableCellRenderer extends DefaultTableCellRenderer {
+
+		private static final long serialVersionUID = -1888924791239159846L;
+
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
+				int column) {
+
+			final JLabel component = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+			final Long lastUpdate = (Long) value;
+
+			component.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(lastUpdate)));
 
 			if (isSelected) {
 				setBackground((row % 2 == 0) ? Color.decode("#FFC57A") : Color.decode("#F5AC4C"));
@@ -229,13 +258,17 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		// Render the table headers with a bold font
 		this.table.getTableHeader().setFont(Utils.getBoldFont(this.table.getTableHeader().getFont()));
 
-		final TableColumn fileColumn = this.table.getColumn("File");
+		final TableColumn fileColumn = this.table.getColumn(FileTableModel.COLUMN_NAME);
 		fileColumn.setCellRenderer(new FileTableCellRenderer());
 		fileColumn.setResizable(true);
 
-		final TableColumn sizeColumn = this.table.getColumn("Size");
+		final TableColumn sizeColumn = this.table.getColumn(FileTableModel.COLUMN_SIZE);
 		sizeColumn.setCellRenderer(new FileSizeTableCellRenderer());
 		sizeColumn.setResizable(true);
+
+		final TableColumn lastUpdateColumn = this.table.getColumn(FileTableModel.COLUMN_LAST_UPDATE);
+		lastUpdateColumn.setCellRenderer(new LastUpdateTableCellRenderer());
+		lastUpdateColumn.setResizable(true);
 
 		this.directoryButton.setFocusable(false);
 		this.directoryButton.setHorizontalAlignment(SwingConstants.LEFT);
