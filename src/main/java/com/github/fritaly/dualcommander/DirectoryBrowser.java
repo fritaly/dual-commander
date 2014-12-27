@@ -27,9 +27,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
@@ -110,6 +113,16 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 
 		private static final long serialVersionUID = -5094024636812268688L;
 
+		private final DecimalFormat decimalFormat;
+
+		public FileSizeTableCellRenderer() {
+			final DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
+			symbols.setGroupingSeparator(' ');
+
+			this.decimalFormat = new DecimalFormat();
+			this.decimalFormat.setDecimalFormatSymbols(symbols);
+		}
+
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
 				int column) {
@@ -118,7 +131,8 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 
 			final Long fileSize = (Long) value;
 
-			component.setText(String.format("%d", fileSize));
+			// Render the file sizes with ' ' as grouping separator
+			component.setText(decimalFormat.format(fileSize));
 			component.setHorizontalAlignment(JLabel.RIGHT);
 
 			if (isSelected) {
