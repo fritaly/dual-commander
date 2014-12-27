@@ -33,4 +33,10 @@ public final class Icons {
 	public static final ImageIcon COG_ICON = getIcon("cog.png");
 
 	public static final ImageIcon HELP_ICON = getIcon("help.png");
+
+	public static final ImageIcon COPY_ICON = getIcon("page_copy.png");
+
+	public static final ImageIcon DELETE_ICON = getIcon("delete.png");
+
+	public static final ImageIcon EDIT_ICON = getIcon("page_edit.png");
 }

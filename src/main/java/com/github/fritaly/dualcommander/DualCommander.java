@@ -149,7 +149,7 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		private static final long serialVersionUID = -4570243231693650751L;
 
 		public EditAction() {
-			super("F4 Edit");
+			super("F4 Edit", Icons.EDIT_ICON);
 		}
 
 		@Override
@@ -163,7 +163,7 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		private static final long serialVersionUID = -4681732083985135686L;
 
 		public CopyAction() {
-			super("F5 Copy");
+			super("F5 Copy", Icons.COPY_ICON);
 		}
 
 		@Override
@@ -287,7 +287,7 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		private static final long serialVersionUID = -4059922323563836824L;
 
 		public DeleteAction() {
-			super("F8 Delete");
+			super("F8 Delete", Icons.DELETE_ICON);
 		}
 
 		@Override
