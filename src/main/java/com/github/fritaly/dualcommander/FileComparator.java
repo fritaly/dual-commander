@@ -42,7 +42,7 @@ public final class FileComparator implements Comparator<File> {
 			if (f2.isDirectory()) {
 				if (f2.equals(this.delegate.getParentDirectory())) {
 					// The parent directory always comes first
-					return -1;
+					return +1;
 				}
 
 				// Compare the 2 directories by (case-insensive) name
