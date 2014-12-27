@@ -226,6 +226,9 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		this.table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		this.table.getSelectionModel().addListSelectionListener(this);
 
+		// Render the table headers with a bold font
+		this.table.getTableHeader().setFont(Utils.getBoldFont(this.table.getTableHeader().getFont()));
+
 		final TableColumn fileColumn = this.table.getColumn("File");
 		fileColumn.setCellRenderer(new FileTableCellRenderer());
 		fileColumn.setResizable(true);
