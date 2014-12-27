@@ -58,10 +58,13 @@ import org.apache.log4j.Logger;
 
 import com.github.fritaly.dualcommander.event.ChangeEventSource;
 import com.github.fritaly.dualcommander.event.ChangeEventSupport;
+import com.github.fritaly.dualcommander.event.ColumnEvent;
+import com.github.fritaly.dualcommander.event.ColumnEventHelper;
+import com.github.fritaly.dualcommander.event.ColumnEventListener;
 
 
 public class DirectoryBrowser extends JPanel implements ListSelectionListener, ChangeEventSource, KeyListener, MouseListener,
-		HasParentDirectory, FocusListener {
+		HasParentDirectory, FocusListener, ColumnEventListener {
 
 	private static final Color EVEN_ROW = Color.WHITE;
 
@@ -273,6 +276,12 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		this.table.addFocusListener(this);
 		this.table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		this.table.getSelectionModel().addListSelectionListener(this);
+
+		// Listen to column event resize events
+		final ColumnEventHelper eventHelper = new ColumnEventHelper(this);
+
+		this.table.getColumnModel().addColumnModelListener(eventHelper);
+		this.table.getTableHeader().addMouseListener(eventHelper);
 
 		// Render the table headers with a bold font
 		this.table.getTableHeader().setFont(Utils.getBoldFont(this.table.getTableHeader().getFont()));
@@ -535,5 +544,10 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 				}
 			}
 		}
+	}
+
+	@Override
+	public void columnResized(ColumnEvent event) {
+		System.err.println(event);
 	}
 }
