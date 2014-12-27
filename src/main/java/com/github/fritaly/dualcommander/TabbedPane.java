@@ -186,8 +186,14 @@ public class TabbedPane extends JTabbedPane implements KeyListener, ChangeListen
 		final int tabCount = preferences.getInt("tab.count", 1);
 
 		for (int i = 0; i < tabCount; i++) {
-			// Create a tab set to the correct directory
-			addBrowserTab(new File(preferences.get(String.format("tab.%d.directory", i), ".")));
+			final File directory = new File(preferences.get(String.format("tab.%d.directory", i), "."));
+
+			if (directory.exists()) {
+				// Ensure the directory exists. Create a new tab
+				addBrowserTab(directory);
+			} else {
+				logger.warn(String.format("The directory '%s' doesn't exist", directory.getAbsolutePath()));
+			}
 		}
 
 		// Ensure the tabbed pane has at least one tab
