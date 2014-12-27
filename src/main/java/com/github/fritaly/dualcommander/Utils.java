@@ -17,6 +17,7 @@
 package com.github.fritaly.dualcommander;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -318,5 +319,11 @@ public class Utils {
             throw new IOException("Destination '" + destFile + "' exists but is read-only");
         }
         doCopyFile(srcFile, destFile, preserveFileDate);
+    }
+
+    public static Font getBoldFont(Font font) {
+    	Validate.notNull(font, "The given font is null");
+
+    	return new Font(font.getName(), font.getStyle() | Font.BOLD, font.getSize());
     }
 }
