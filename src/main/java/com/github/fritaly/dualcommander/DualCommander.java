@@ -74,7 +74,7 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		private static final long serialVersionUID = -8972233122891491665L;
 
 		public AboutAction() {
-			super("About");
+			super("About", Icons.HELP_ICON);
 		}
 
 		@Override
@@ -88,7 +88,7 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		private static final long serialVersionUID = -4073587940746786910L;
 
 		public PreferencesAction() {
-			super("Preferences");
+			super("Preferences", Icons.COG_ICON);
 		}
 
 		public JButton getButton(final JOptionPane optionPane, String text, Icon icon) {
