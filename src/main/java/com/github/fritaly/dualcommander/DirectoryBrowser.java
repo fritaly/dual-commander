@@ -114,6 +114,39 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		}
 	}
 
+	private final class FileTypeTableCellRenderer extends DefaultTableCellRenderer {
+
+		private static final long serialVersionUID = -1456922668251532841L;
+
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
+				int column) {
+
+			final JLabel component = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+			final File file = (File) value;
+
+			if (file.isDirectory()) {
+				component.setIcon(Icons.FOLDER_ICON);
+			} else {
+				component.setIcon(null);
+			}
+
+			component.setText("");
+
+			if (isSelected) {
+				setBackground((row % 2 == 0) ? Color.decode("#FFC57A") : Color.decode("#F5AC4C"));
+			} else {
+				setBackground((row % 2 == 0) ? EVEN_ROW : ODD_ROW);
+			}
+
+			setForeground(Color.decode("#555555"));
+			setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+
+			return component;
+		}
+	}
+
 	private final class FileSizeTableCellRenderer extends DefaultTableCellRenderer {
 
 		private static final long serialVersionUID = -5094024636812268688L;
@@ -305,6 +338,12 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		this.table.getTableHeader().setBackground(Color.decode("#CCCCCC"));
 		this.table.getTableHeader().setDefaultRenderer(new TableHeaderRenderer());
 		this.table.getTableHeader().addMouseListener(this);
+
+		final TableColumn typeColumn = this.table.getColumn(FileTableModel.COLUMN_TYPE);
+		typeColumn.setCellRenderer(new FileTypeTableCellRenderer());
+		typeColumn.setResizable(false);
+		typeColumn.setHeaderValue("");
+		typeColumn.setMaxWidth(Icons.FOLDER_ICON.getIconWidth() + 5);
 
 		final TableColumn fileColumn = this.table.getColumn(FileTableModel.COLUMN_NAME);
 		fileColumn.setCellRenderer(new FileTableCellRenderer());
