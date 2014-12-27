@@ -122,17 +122,31 @@ public class FileTableModel implements TableModel {
 
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
-		return File.class;
+		switch (columnIndex) {
+		case 0:
+			return File.class;
+		case 1:
+			return Long.class;
+		default:
+			throw new IllegalArgumentException(String.format("Invalid column index: %d", columnIndex));
+		}
 	}
 
 	@Override
 	public int getColumnCount() {
-		return 1;
+		return 2;
 	}
 
 	@Override
 	public String getColumnName(int columnIndex) {
-		return "File";
+		switch (columnIndex) {
+		case 0:
+			return "File";
+		case 1:
+			return "Size";
+		default:
+			throw new IllegalArgumentException(String.format("Invalid column index: %d", columnIndex));
+		}
 	}
 
 	@Override
@@ -142,7 +156,16 @@ public class FileTableModel implements TableModel {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		return list.get(rowIndex);
+		final File file = list.get(rowIndex);
+
+		switch (columnIndex) {
+		case 0:
+			return file;
+		case 1:
+			return new Long(file.length());
+		default:
+			throw new IllegalArgumentException(String.format("Invalid column index: %d", columnIndex));
+		}
 	}
 
 	public File getFileAt(int rowIndex) {
@@ -166,10 +189,13 @@ public class FileTableModel implements TableModel {
 
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		list.set(rowIndex, (File) aValue);
+		// We don't support that operation
+		throw new UnsupportedOperationException();
 
-		// Fire an event to notify the change
-		fireTableChanged(new TableModelEvent(this, rowIndex));
+//		list.set(rowIndex, (File) aValue);
+//
+//		// Fire an event to notify the change
+//		fireTableChanged(new TableModelEvent(this, rowIndex));
 	}
 
 	public boolean contains(File element) {

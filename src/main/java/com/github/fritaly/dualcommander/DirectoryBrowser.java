@@ -44,6 +44,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -97,6 +98,33 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 
 			setForeground(file.isDirectory() ? Color.BLACK : Color.decode("#555555"));
 
+			setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+
+			return component;
+		}
+	}
+
+	private final class FileSizeTableCellRenderer extends DefaultTableCellRenderer {
+
+		private static final long serialVersionUID = -5094024636812268688L;
+
+		@Override
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
+				int column) {
+
+			final JLabel component = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+			final Long fileSize = (Long) value;
+
+			component.setText(String.format("%d", fileSize));
+
+			if (isSelected) {
+				setBackground((row % 2 == 0) ? Color.decode("#FFC57A") : Color.decode("#F5AC4C"));
+			} else {
+				setBackground((row % 2 == 0) ? EVEN_ROW : ODD_ROW);
+			}
+
+			setForeground(Color.decode("#555555"));
 			setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
 			return component;
@@ -191,13 +219,20 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		this.tableModel = new FileTableModel(this);
 
 		this.table = new JTable(tableModel);
-		this.table.getColumn("File").setCellRenderer(new FileTableCellRenderer());
 		this.table.setBackground(Utils.getDefaultBackgroundColor());
 		this.table.addKeyListener(this);
 		this.table.addMouseListener(this);
 		this.table.addFocusListener(this);
 		this.table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		this.table.getSelectionModel().addListSelectionListener(this);
+
+		final TableColumn fileColumn = this.table.getColumn("File");
+		fileColumn.setCellRenderer(new FileTableCellRenderer());
+		fileColumn.setResizable(true);
+
+		final TableColumn sizeColumn = this.table.getColumn("Size");
+		sizeColumn.setCellRenderer(new FileSizeTableCellRenderer());
+		sizeColumn.setResizable(true);
 
 		this.directoryButton.setFocusable(false);
 		this.directoryButton.setHorizontalAlignment(SwingConstants.LEFT);
