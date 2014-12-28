@@ -24,44 +24,44 @@ public final class Icons {
 		return new ImageIcon(Icons.class.getResource(String.format("/com/github/fritaly/dualcommander/icons/%s", name)));
 	}
 
-	public static final ImageIcon FOLDER_ICON = getIcon("folder.png");
+	public static final ImageIcon FOLDER_ICON = getIcon("famfamfam/folder.png");
 
-	public static final ImageIcon ACCEPT_ICON = getIcon("accept.png");
+	public static final ImageIcon ACCEPT_ICON = getIcon("famfamfam/accept.png");
 
-	public static final ImageIcon CANCEL_ICON = getIcon("cancel.png");
+	public static final ImageIcon CANCEL_ICON = getIcon("famfamfam/cancel.png");
 
-	public static final ImageIcon COG_ICON = getIcon("cog.png");
+	public static final ImageIcon COG_ICON = getIcon("famfamfam/cog.png");
 
-	public static final ImageIcon HELP_ICON = getIcon("help.png");
+	public static final ImageIcon HELP_ICON = getIcon("famfamfam/help.png");
 
-	public static final ImageIcon COPY_ICON = getIcon("page_copy.png");
+	public static final ImageIcon COPY_ICON = getIcon("famfamfam/page_copy.png");
 
-	public static final ImageIcon DELETE_ICON = getIcon("delete.png");
+	public static final ImageIcon DELETE_ICON = getIcon("famfamfam/delete.png");
 
 	// TODO Test icon "pencil.png"
-	public static final ImageIcon EDIT_ICON = getIcon("page_edit.png");
+	public static final ImageIcon EDIT_ICON = getIcon("famfamfam/page_edit.png");
 
-	public static final ImageIcon TICK_ICON = getIcon("tick.png");
+	public static final ImageIcon TICK_ICON = getIcon("famfamfam/tick.png");
 
-	public static final ImageIcon FIRST_ICON = getIcon("resultset_first.png");
+	public static final ImageIcon FIRST_ICON = getIcon("famfamfam/resultset_first.png");
 
-	public static final ImageIcon LAST_ICON = getIcon("resultset_last.png");
+	public static final ImageIcon LAST_ICON = getIcon("famfamfam/resultset_last.png");
 
-	public static final ImageIcon NEXT_ICON = getIcon("resultset_next.png");
+	public static final ImageIcon NEXT_ICON = getIcon("famfamfam/resultset_next.png");
 
-	public static final ImageIcon PREVIOUS_ICON = getIcon("resultset_previous.png");
+	public static final ImageIcon PREVIOUS_ICON = getIcon("famfamfam/resultset_previous.png");
 
-	public static final ImageIcon INFORMATION_ICON = getIcon("information.png");
+	public static final ImageIcon INFORMATION_ICON = getIcon("famfamfam/information.png");
 
-	public static final ImageIcon EXCLAMATION_ICON = getIcon("exclamation.png");
+	public static final ImageIcon EXCLAMATION_ICON = getIcon("famfamfam/exclamation.png");
 
-	public static final ImageIcon ERROR_ICON = getIcon("error.png");
+	public static final ImageIcon ERROR_ICON = getIcon("famfamfam/error.png");
 
-	public static final ImageIcon DRIVE_ICON = getIcon("drive.png");
+	public static final ImageIcon DRIVE_ICON = getIcon("famfamfam/drive.png");
 
-	public static final ImageIcon CUT_ICON = getIcon("cut.png");
+	public static final ImageIcon CUT_ICON = getIcon("famfamfam/cut.png");
 
-	public static final ImageIcon ADD_ICON = getIcon("add.png");
+	public static final ImageIcon ADD_ICON = getIcon("famfamfam/add.png");
 
-	public static final ImageIcon DOOR_OPEN_ICON = getIcon("door_open.png");
+	public static final ImageIcon DOOR_OPEN_ICON = getIcon("famfamfam/door_open.png");
 }
