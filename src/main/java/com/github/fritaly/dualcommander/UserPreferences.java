@@ -34,10 +34,24 @@ public final class UserPreferences {
 	 */
 	public static final String PROPERTY_SHOW_HIDDEN = "show.hidden";
 
+	public static final String PROPERTY_EDIT_FILE_COMMAND = "commands.edit.file";
+
+	public static final String PROPERTY_VIEW_FILE_COMMAND = "commands.view.file";
+
 	/**
 	 * Whether hidden directories and files should be shown.
 	 */
 	private boolean showHidden = false;
+
+	/**
+	 * The command line for editing a file with an external process.
+	 */
+	private String editFileCommand = "edit";
+
+	/**
+	 * The command line for viewing a file with an external process.
+	 */
+	private String viewFileCommand = "open";
 
 	/**
 	 * Whether the object state has been initialized.
@@ -52,6 +66,8 @@ public final class UserPreferences {
 		Validate.notNull(preferences, "The given user preferences is null");
 
 		this.showHidden = preferences.isShowHidden();
+		this.editFileCommand = preferences.getEditFileCommand();
+		this.viewFileCommand = preferences.getViewFileCommand();
 
 		// The user preferences can be initialized only once
 		this.initialized = true;
@@ -61,6 +77,8 @@ public final class UserPreferences {
 		Validate.notNull(preferences, "The given user preferences is null");
 
 		setShowHidden(preferences.isShowHidden());
+		setEditFileCommand(preferences.getEditFileCommand());
+		setViewFileCommand(preferences.getViewFileCommand());
 	}
 
 	private void assertInitialized() {
@@ -93,6 +111,8 @@ public final class UserPreferences {
 		Validate.notNull(preferences, "The given preferences is null");
 
 		this.showHidden = preferences.getBoolean(PROPERTY_SHOW_HIDDEN, false);
+		this.editFileCommand = preferences.get(PROPERTY_EDIT_FILE_COMMAND, "edit");
+		this.viewFileCommand = preferences.get(PROPERTY_VIEW_FILE_COMMAND, "open");
 
 		// The user preferences can be initialized only once
 		this.initialized = true;
@@ -108,10 +128,42 @@ public final class UserPreferences {
 		Validate.notNull(preferences, "The given preferences is null");
 
 		preferences.putBoolean(PROPERTY_SHOW_HIDDEN, this.showHidden);
+		preferences.put(PROPERTY_EDIT_FILE_COMMAND, this.editFileCommand);
+		preferences.put(PROPERTY_VIEW_FILE_COMMAND, this.viewFileCommand);
 
 		if (logger.isInfoEnabled()) {
 			logger.info("Saved user preferences");
 		}
+	}
+
+	public String getEditFileCommand() {
+		assertInitialized();
+
+		return editFileCommand;
+	}
+
+	public String getViewFileCommand() {
+		assertInitialized();
+
+		return viewFileCommand;
+	}
+
+	public void setEditFileCommand(String command) {
+		Validate.notNull(command, "The given edit file command is null");
+
+		assertInitialized();
+
+		// No need to notify listeners
+		this.editFileCommand = command;
+	}
+
+	public void setViewFileCommand(String command) {
+		Validate.notNull(editFileCommand, "The given view file command is null");
+
+		assertInitialized();
+
+		// No need to notify listeners
+		this.viewFileCommand = command;
 	}
 
 	public boolean isShowHidden() {

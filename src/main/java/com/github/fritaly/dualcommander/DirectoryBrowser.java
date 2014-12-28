@@ -19,7 +19,6 @@ package com.github.fritaly.dualcommander;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
@@ -580,8 +579,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 					} else {
 						try {
 							// View the selected file
-							// TODO Make the command line configurable
-							new ProcessBuilder("open", file.getAbsolutePath()).start();
+							new ProcessBuilder(preferences.getViewFileCommand(), file.getAbsolutePath()).start();
 						} catch (IOException e1) {
 							logger.error("Error when viewing file", e1);
 						}

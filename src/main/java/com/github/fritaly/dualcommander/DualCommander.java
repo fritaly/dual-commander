@@ -148,8 +148,7 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 					final File file = selection.iterator().next();
 
 					if (file.isFile()) {
-						// TODO Make the command line configurable
-						new ProcessBuilder("open", file.getAbsolutePath()).start();
+						new ProcessBuilder(preferences.getViewFileCommand(), file.getAbsolutePath()).start();
 					}
 				}
 			} catch (IOException e1) {
@@ -176,8 +175,7 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 					final File file = selection.iterator().next();
 
 					if (file.isFile()) {
-						// TODO Make the command line configurable
-						new ProcessBuilder("edit", file.getAbsolutePath()).start();
+						new ProcessBuilder(preferences.getEditFileCommand(), file.getAbsolutePath()).start();
 					}
 				}
 			} catch (IOException e1) {
