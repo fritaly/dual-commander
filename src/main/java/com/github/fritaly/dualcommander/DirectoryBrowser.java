@@ -27,6 +27,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -192,6 +193,8 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 
 		private static final long serialVersionUID = -1888924791239159846L;
 
+		private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
 				int column) {
@@ -200,7 +203,12 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 
 			final File file = (File) value;
 
-			component.setText(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(file.lastModified())));
+			if (file.equals(getParentDirectory())) {
+				// Don't display the last modified date for the parent directory
+				component.setText("");
+			} else {
+				component.setText(dateFormat.format(new Date(file.lastModified())));
+			}
 
 			if (isSelected) {
 				setBackground((row % 2 == 0) ? Color.decode("#FFC57A") : Color.decode("#F5AC4C"));
