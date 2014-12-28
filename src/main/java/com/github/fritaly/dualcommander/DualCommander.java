@@ -145,8 +145,12 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 				final List<File> selection = activePane.getActiveBrowser().getSelection();
 
 				if (!selection.isEmpty() && (selection.size() == 1)) {
-					// TODO Make the command line configurable
-					new ProcessBuilder("open", selection.iterator().next().getAbsolutePath()).start();
+					final File file = selection.iterator().next();
+
+					if (file.isFile()) {
+						// TODO Make the command line configurable
+						new ProcessBuilder("open", file.getAbsolutePath()).start();
+					}
 				}
 			} catch (IOException e1) {
 				logger.error("Error when view file", e1);
@@ -164,7 +168,21 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JOptionPane.showMessageDialog(DualCommander.this, "Not implemented yet", "Error", JOptionPane.ERROR_MESSAGE);
+			try {
+				// What's the active pane's file selection ?
+				final List<File> selection = activePane.getActiveBrowser().getSelection();
+
+				if (!selection.isEmpty() && (selection.size() == 1)) {
+					final File file = selection.iterator().next();
+
+					if (file.isFile()) {
+						// TODO Make the command line configurable
+						new ProcessBuilder("edit", file.getAbsolutePath()).start();
+					}
+				}
+			} catch (IOException e1) {
+				logger.error("Error when view file", e1);
+			}
 		}
 	}
 
