@@ -18,6 +18,8 @@ package com.github.fritaly.dualcommander;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -42,6 +44,14 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.Validate;
 
 public class Utils {
+
+	public static int getTimestampRenderWidth() {
+		final String text = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+		final Font font = Utils.getDefaultFont();
+		final FontRenderContext context = new FontRenderContext(new AffineTransform(), true, true);
+
+		return (int) font.getStringBounds(text, context).getWidth();
+	}
 
 	public static Border createEmptyBorder(int space) {
 		return BorderFactory.createEmptyBorder(space, space, space, space);

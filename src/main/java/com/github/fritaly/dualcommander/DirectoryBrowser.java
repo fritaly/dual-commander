@@ -19,6 +19,7 @@ package com.github.fritaly.dualcommander;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
@@ -326,9 +327,12 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		sizeColumn.setCellRenderer(new FileSizeRenderer());
 		sizeColumn.setResizable(true);
 
+		// Dynamically set the column to the correct size
 		final TableColumn lastUpdateColumn = this.table.getColumn(FileTableModel.COLUMN_LAST_UPDATE);
 		lastUpdateColumn.setCellRenderer(new LastUpdateRenderer());
-		lastUpdateColumn.setResizable(true);
+		lastUpdateColumn.setResizable(false);
+		lastUpdateColumn.setMaxWidth(Utils.getTimestampRenderWidth() + 5);
+		lastUpdateColumn.setMinWidth(Utils.getTimestampRenderWidth() + 5);
 
 		// Use a square border (not one with rounded corners)
 		this.directoryButton.setBorder(Utils.createRaisedBevelBorder());
