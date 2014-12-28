@@ -27,7 +27,7 @@ public final class ConfigurableFileComparator implements Comparator<File> {
 
 	private SortCriteria criteria = SortCriteria.NAME;
 
-	private boolean ascending;
+	private boolean ascending = true;
 
 	public ConfigurableFileComparator(HasParentDirectory delegate) {
 		Validate.notNull(delegate, "The given delegate is null");
