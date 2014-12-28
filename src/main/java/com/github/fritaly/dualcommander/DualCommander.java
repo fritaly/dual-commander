@@ -153,7 +153,7 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 					}
 				}
 			} catch (IOException e1) {
-				logger.error("Error when view file", e1);
+				logger.error("Error when viewing file", e1);
 			}
 		}
 	}
@@ -181,7 +181,7 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 					}
 				}
 			} catch (IOException e1) {
-				logger.error("Error when view file", e1);
+				logger.error("Error when editing file", e1);
 			}
 		}
 	}

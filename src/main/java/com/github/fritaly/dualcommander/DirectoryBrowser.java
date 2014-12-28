@@ -577,6 +577,14 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 					if (file.isDirectory()) {
 						// Change to the clicked directory
 						setDirectory(file);
+					} else {
+						try {
+							// View the selected file
+							// TODO Make the command line configurable
+							new ProcessBuilder("open", file.getAbsolutePath()).start();
+						} catch (IOException e1) {
+							logger.error("Error when viewing file", e1);
+						}
 					}
 				}
 			}
