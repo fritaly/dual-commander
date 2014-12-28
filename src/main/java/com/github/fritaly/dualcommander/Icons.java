@@ -64,4 +64,8 @@ public final class Icons {
 	public static final ImageIcon ADD_ICON = getIcon("famfamfam/add.png");
 
 	public static final ImageIcon DOOR_OPEN_ICON = getIcon("famfamfam/door_open.png");
+
+    public static final ImageIcon TRIANGLE_DOWN_ICON = getIcon("google/drop25.png");
+
+    public static final ImageIcon TRIANGLE_UP_ICON = getIcon("google/drop27.png");
 }

@@ -215,7 +215,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		}
 	}
 
-	private static class TableHeaderRenderer extends JLabel implements TableCellRenderer {
+	private final class TableHeaderRenderer extends JLabel implements TableCellRenderer {
 
 		private static final long serialVersionUID = 596061491019164527L;
 
@@ -223,6 +223,14 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
 				int column) {
 
+			if (tableModel.getSortCriteria().ordinal() == column) {
+				setIcon(!tableModel.isSortAscending() ? Icons.TRIANGLE_UP_ICON : Icons.TRIANGLE_DOWN_ICON);
+			} else {
+				setIcon(null);
+			}
+
+			// Display the text on the left and the icon on the right
+			setHorizontalTextPosition(SwingConstants.LEFT);
 			setText(value.toString());
 			setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 

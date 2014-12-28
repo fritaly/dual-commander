@@ -101,6 +101,10 @@ public class FileTableModel implements TableModel {
 		fireTableDataChanged();
 	}
 
+	public boolean isSortAscending() {
+		return comparator.isAscending();
+	}
+
 	@Override
 	public void addTableModelListener(TableModelListener l) {
 		listeners.add(TableModelListener.class, l);
