@@ -98,9 +98,8 @@ public class Utils {
 	}
 
 	/**
-	 * Scans (i.e. recurses) into the given directory and notifies the file
-	 * handler on any file or directory found. The scan is a depth-first
-	 * traversal.
+	 * Scans the given directory and notifies the file handler on any file or
+	 * directory found. If recusive, the scan is a depth-first traversal.
 	 *
 	 * @param directory
 	 *            the directory to scan. Can't be null. Must point to a
@@ -108,25 +107,29 @@ public class Utils {
 	 * @param handler
 	 *            a file handler to be notified of files / directories found.
 	 *            Can't be null.
+	 * @param recurse
+	 *            whether the scan should be recursive.
 	 */
-	public static void scan(File directory, FileHandler handler) {
+	public static void scan(File directory, FileHandler handler, boolean recurse) {
 		Validate.notNull(directory, "The given directory is null");
 		Validate.isTrue(directory.exists(), String.format("The given directory '%s' doesn't exist", directory.getAbsolutePath()));
 		Validate.isTrue(directory.isDirectory(), String.format("The given path '%s' doesn't denote a directory", directory.getAbsolutePath()));
 		Validate.notNull(handler, "The given file handler is null");
 
 		// Delegate to the non-validating recursive method
-		_scan(directory, handler);
+		_scan(directory, handler, recurse);
 	}
 
 	// This private version of the method scan() is more efficient because it
 	// doesn't have to validate arguments (validation was done by the public
 	// method)
-	private static void _scan(File directory, FileHandler handler) {
+	private static void _scan(File directory, FileHandler handler, boolean recurse) {
 		for (File entry : directory.listFiles()) {
 			if (entry.isDirectory()) {
-				// Recurse into the directory
-				scan(entry, handler);
+				if (recurse) {
+					// Recurse into the directory
+					_scan(entry, handler, recurse);
+				}
 			}
 
 			// Notify the file handler

@@ -70,7 +70,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 
 	private static final Color ODD_ROW = Color.decode("#DDDDFF");
 
-	private final class FileTableCellRenderer extends DefaultTableCellRenderer {
+	private final class FileNameRenderer extends DefaultTableCellRenderer {
 
 		private static final long serialVersionUID = -896199602148007012L;
 
@@ -112,7 +112,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		}
 	}
 
-	private final class FileTypeTableCellRenderer extends DefaultTableCellRenderer {
+	private final class FileTypeRenderer extends DefaultTableCellRenderer {
 
 		private static final long serialVersionUID = -1456922668251532841L;
 
@@ -145,13 +145,13 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		}
 	}
 
-	private final class FileSizeTableCellRenderer extends DefaultTableCellRenderer {
+	private final class FileSizeRenderer extends DefaultTableCellRenderer {
 
 		private static final long serialVersionUID = -5094024636812268688L;
 
 		private final DecimalFormat decimalFormat;
 
-		public FileSizeTableCellRenderer() {
+		public FileSizeRenderer() {
 			final DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
 			symbols.setGroupingSeparator(' ');
 
@@ -188,7 +188,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		}
 	}
 
-	private final class LastUpdateTableCellRenderer extends DefaultTableCellRenderer {
+	private final class LastUpdateRenderer extends DefaultTableCellRenderer {
 
 		private static final long serialVersionUID = -1888924791239159846L;
 
@@ -296,21 +296,21 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		this.table.getTableHeader().addMouseListener(this);
 
 		final TableColumn typeColumn = this.table.getColumn(FileTableModel.COLUMN_TYPE);
-		typeColumn.setCellRenderer(new FileTypeTableCellRenderer());
+		typeColumn.setCellRenderer(new FileTypeRenderer());
 		typeColumn.setResizable(false);
 		typeColumn.setHeaderValue("");
 		typeColumn.setMaxWidth(Icons.FOLDER_ICON.getIconWidth() + 5);
 
 		final TableColumn fileColumn = this.table.getColumn(FileTableModel.COLUMN_NAME);
-		fileColumn.setCellRenderer(new FileTableCellRenderer());
+		fileColumn.setCellRenderer(new FileNameRenderer());
 		fileColumn.setResizable(true);
 
 		final TableColumn sizeColumn = this.table.getColumn(FileTableModel.COLUMN_SIZE);
-		sizeColumn.setCellRenderer(new FileSizeTableCellRenderer());
+		sizeColumn.setCellRenderer(new FileSizeRenderer());
 		sizeColumn.setResizable(true);
 
 		final TableColumn lastUpdateColumn = this.table.getColumn(FileTableModel.COLUMN_LAST_UPDATE);
-		lastUpdateColumn.setCellRenderer(new LastUpdateTableCellRenderer());
+		lastUpdateColumn.setCellRenderer(new LastUpdateRenderer());
 		lastUpdateColumn.setResizable(true);
 
 		this.directoryButton.setFocusable(false);
