@@ -54,6 +54,7 @@ import javax.swing.table.TableColumn;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 
@@ -278,6 +279,8 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 
 	private final UserPreferences preferences;
 
+	private final JLabel summary;
+
 	public DirectoryBrowser(UserPreferences preferences, File directory) {
 		Validate.notNull(preferences, "The given user preferences are null");
 		Validate.notNull(directory, "The given directory is null");
@@ -287,7 +290,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		this.preferences = preferences;
 
 		// Layout, columns & rows
-		setLayout(new MigLayout("insets 0px", "[grow]", "[][grow]"));
+		setLayout(new MigLayout("insets 0px", "[grow]", "[]0[grow]0[]"));
 
 		this.tableModel = new FileTableModel(this);
 
@@ -332,8 +335,12 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		this.directoryButton.setFocusable(false);
 		this.directoryButton.setHorizontalAlignment(SwingConstants.LEFT);
 
-		add(directoryButton, "grow, span");
-		add(new JScrollPane(table), "grow");
+		this.summary = new JLabel(" ");
+		this.summary.setBorder(BorderFactory.createCompoundBorder(Utils.createRaisedBevelBorder(), Utils.createEmptyBorder(1)));
+
+		add(directoryButton, "grow, wrap");
+		add(new JScrollPane(table), "grow, wrap");
+		add(summary, "grow");
 
 		// Set the directory (this will populate the table)
 		setDirectory(directory);
@@ -370,10 +377,41 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 
 		this.tableModel.clear();
 
+		int files = 0, folders = 0;
+		long totalSize = 0;
+
 		// Populate the list with the directory's entries
 		for (File file : directory.listFiles()) {
 			if (!file.isHidden() || preferences.isShowHidden()) {
 				tableModel.add(file);
+
+				if (file.isFile()) {
+					files++;
+					totalSize += file.length();
+				} else {
+					folders++;
+				}
+			}
+		}
+
+		final DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
+		symbols.setGroupingSeparator(' ');
+
+		final DecimalFormat decimalFormat = new DecimalFormat();
+		decimalFormat.setDecimalFormatSymbols(symbols);
+
+		// Set the summary
+		if (files > 0) {
+			if (folders > 0) {
+				summary.setText(String.format("%d folder(s) and %d file(s) [%s Kb]", folders, files, decimalFormat.format(totalSize / 1024)));
+			} else {
+				summary.setText(String.format("%d file(s) [%s Kb]", files, decimalFormat.format(totalSize / 1024)));
+			}
+		} else {
+			if (folders > 0) {
+				summary.setText(String.format("%d folder(s)", folders));
+			} else {
+				summary.setText(" ");
 			}
 		}
 

@@ -33,12 +33,23 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.Validate;
 
 public class Utils {
+
+	public static Border createEmptyBorder(int space) {
+		return BorderFactory.createEmptyBorder(space, space, space, space);
+	}
+
+	public static Border createRaisedBevelBorder() {
+		return BorderFactory.createBevelBorder(BevelBorder.RAISED);
+	}
 
 	private static class NegatingComparator<T> implements Comparator<T> {
 
