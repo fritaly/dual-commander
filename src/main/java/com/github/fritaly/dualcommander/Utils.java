@@ -48,7 +48,7 @@ public class Utils {
 	}
 
 	public static Border createRaisedBevelBorder() {
-		return BorderFactory.createBevelBorder(BevelBorder.RAISED);
+		return BorderFactory.createCompoundBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED), Utils.createEmptyBorder(1));
 	}
 
 	private static class NegatingComparator<T> implements Comparator<T> {
@@ -150,6 +150,10 @@ public class Utils {
 
 	public static Color getDefaultBackgroundColor() {
 		return new JLabel().getBackground();
+	}
+
+	public static Font getDefaultFont() {
+		return new JLabel().getFont();
 	}
 
 	private static Properties getApplicationProperties() {

@@ -54,7 +54,6 @@ import javax.swing.table.TableColumn;
 
 import net.miginfocom.swing.MigLayout;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
 
@@ -107,8 +106,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 			}
 
 			setForeground(file.isDirectory() ? Color.BLACK : Color.decode("#555555"));
-
-			setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+			setBorder(Utils.createEmptyBorder(2));
 
 			return component;
 		}
@@ -141,7 +139,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 			}
 
 			setForeground(Color.decode("#555555"));
-			setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+			setBorder(Utils.createEmptyBorder(2));
 
 			return component;
 		}
@@ -184,7 +182,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 			}
 
 			setForeground(Color.decode("#555555"));
-			setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+			setBorder(Utils.createEmptyBorder(2));
 
 			return component;
 		}
@@ -218,7 +216,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 			}
 
 			setForeground(Color.decode("#555555"));
-			setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+			setBorder(Utils.createEmptyBorder(2));
 
 			return component;
 		}
@@ -290,7 +288,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		this.preferences = preferences;
 
 		// Layout, columns & rows
-		setLayout(new MigLayout("insets 0px", "[grow]", "[]0[grow]0[]"));
+		setLayout(new MigLayout("insets 0px", "[grow]", "[]1[grow]1[]"));
 
 		this.tableModel = new FileTableModel(this);
 
@@ -310,7 +308,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 
 		// Render the table headers with a bold font
 		this.table.getTableHeader().setFont(Utils.getBoldFont(this.table.getTableHeader().getFont()));
-		this.table.getTableHeader().setBackground(Color.decode("#CCCCCC"));
+		this.table.getTableHeader().setBackground(Utils.getDefaultBackgroundColor());
 		this.table.getTableHeader().setDefaultRenderer(new TableHeaderRenderer());
 		this.table.getTableHeader().addMouseListener(this);
 
@@ -332,11 +330,14 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		lastUpdateColumn.setCellRenderer(new LastUpdateRenderer());
 		lastUpdateColumn.setResizable(true);
 
+		// Use a square border (not one with rounded corners)
+		this.directoryButton.setBorder(Utils.createRaisedBevelBorder());
+		this.directoryButton.setFont(Utils.getDefaultFont());
 		this.directoryButton.setFocusable(false);
 		this.directoryButton.setHorizontalAlignment(SwingConstants.LEFT);
 
 		this.summary = new JLabel(" ");
-		this.summary.setBorder(BorderFactory.createCompoundBorder(Utils.createRaisedBevelBorder(), Utils.createEmptyBorder(1)));
+		this.summary.setBorder(Utils.createRaisedBevelBorder());
 
 		add(directoryButton, "grow, wrap");
 		add(new JScrollPane(table), "grow, wrap");

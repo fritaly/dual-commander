@@ -410,7 +410,7 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 		}
 
 		// Layout, columns & rows
-		setLayout(new MigLayout("insets 0px", "[grow]0px[grow]", "[grow][]"));
+		setLayout(new MigLayout("insets 0px", "[grow]0px[grow]", "[grow]0px[]"));
 
 		// Create a menu bar
 		final JMenu fileMenu = new JMenu("File");
