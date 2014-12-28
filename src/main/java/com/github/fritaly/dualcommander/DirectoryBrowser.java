@@ -361,36 +361,18 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 		setDirectory(getDirectory());
 	}
 
-	public void setDirectory(File directory) {
-		Validate.notNull(directory, "The given directory is null");
-		Validate.isTrue(directory.exists(), String.format("The given directory '%s' doesn't exist", directory.getAbsolutePath()));
-		Validate.isTrue(directory.isDirectory(), String.format("The given path '%s' doesn't denote a directory", directory.getAbsolutePath()));
-
-		final File oldDir = this.directory;
-
-		this.directory = directory;
-
-		// Refresh the UI
-
-		// Display the (normalized) canonical path
-		directoryButton.setText(getCanonicalPath(directory));
-
-		this.tableModel.clear();
+	private void updateSummary(Iterable<File> iterable) {
+		Validate.notNull(iterable, "The give iterable is null");
 
 		int files = 0, folders = 0;
 		long totalSize = 0;
 
-		// Populate the list with the directory's entries
-		for (File file : directory.listFiles()) {
-			if (!file.isHidden() || preferences.isShowHidden()) {
-				tableModel.add(file);
-
-				if (file.isFile()) {
-					files++;
-					totalSize += file.length();
-				} else {
-					folders++;
-				}
+		for (File file : iterable) {
+			if (file.isFile()) {
+				files++;
+				totalSize += file.length();
+			} else {
+				folders++;
 			}
 		}
 
@@ -414,6 +396,32 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 				summary.setText(" ");
 			}
 		}
+	}
+
+	public void setDirectory(File directory) {
+		Validate.notNull(directory, "The given directory is null");
+		Validate.isTrue(directory.exists(), String.format("The given directory '%s' doesn't exist", directory.getAbsolutePath()));
+		Validate.isTrue(directory.isDirectory(), String.format("The given path '%s' doesn't denote a directory", directory.getAbsolutePath()));
+
+		final File oldDir = this.directory;
+
+		this.directory = directory;
+
+		// Refresh the UI
+
+		// Display the (normalized) canonical path
+		directoryButton.setText(getCanonicalPath(directory));
+
+		this.tableModel.clear();
+
+		// Populate the list with the directory's entries
+		for (File file : directory.listFiles()) {
+			if (!file.isHidden() || preferences.isShowHidden()) {
+				tableModel.add(file);
+			}
+		}
+
+		updateSummary(tableModel.getAll());
 
 		// If there's a parent directory, add an entry rendered as ".."
 		final File parentDir = getCanonicalFile(directory).getParentFile();

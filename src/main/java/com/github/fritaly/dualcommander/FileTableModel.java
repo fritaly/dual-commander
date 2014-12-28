@@ -75,6 +75,10 @@ public class FileTableModel implements TableModel {
 		list.add(file);
 	}
 
+	public List<File> getAll() {
+		return Collections.unmodifiableList(list);
+	}
+
 	public void sort() {
 		Collections.sort(list, comparator);
 	}
