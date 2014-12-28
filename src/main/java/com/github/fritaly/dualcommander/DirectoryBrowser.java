@@ -35,10 +35,8 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -211,48 +209,6 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 			}
 
 			setForeground(Color.decode("#555555"));
-			setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-
-			return component;
-		}
-	}
-
-	private final class FileListCellRenderer extends DefaultListCellRenderer {
-
-		private static final long serialVersionUID = -8630518399718717693L;
-
-		@Override
-		public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
-				boolean cellHasFocus) {
-
-			final JLabel component = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-
-			final File file = (File) value;
-
-			if (file.isDirectory()) {
-				// Render the directories with a bold font
-				final Font font = component.getFont();
-
-				component.setFont(new Font(font.getName(), Font.BOLD, component.getFont().getSize()));
-
-				if (file.equals(getParentDirectory())) {
-					// Render the parent directory entry as ".."
-					component.setText("[..]");
-				} else {
-					component.setText(String.format("[%s]", file.getName()));
-				}
-			} else {
-				component.setText(file.getName());
-			}
-
-			if (isSelected) {
-				setBackground((index % 2 == 0) ? Color.decode("#FFC57A") : Color.decode("#F5AC4C"));
-			} else {
-				setBackground((index % 2 == 0) ? EVEN_ROW : ODD_ROW);
-			}
-
-			setForeground(file.isDirectory() ? Color.BLACK : Color.decode("#555555"));
-
 			setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
 			return component;
