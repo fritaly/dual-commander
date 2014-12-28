@@ -173,7 +173,11 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 				component.setText(decimalFormat.format(file.length()));
 				component.setHorizontalAlignment(JLabel.RIGHT);
 			} else {
-				component.setText("");
+				// Render the directories with a bold font
+				final Font font = component.getFont();
+
+				component.setFont(new Font(font.getName(), Font.BOLD, component.getFont().getSize()));
+				component.setText("[DIR]");
 			}
 
 			if (isSelected) {
@@ -182,7 +186,7 @@ public class DirectoryBrowser extends JPanel implements ListSelectionListener, C
 				setBackground((row % 2 == 0) ? EVEN_ROW : ODD_ROW);
 			}
 
-			setForeground(Color.decode("#555555"));
+			setForeground(file.isDirectory() ? Color.BLACK : Color.decode("#555555"));
 			setBorder(Utils.createEmptyBorder(2));
 
 			return component;
