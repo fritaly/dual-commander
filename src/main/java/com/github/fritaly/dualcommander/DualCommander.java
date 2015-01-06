@@ -67,6 +67,10 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 	private static final long serialVersionUID = 5445919782222373150L;
 
+	// TODO Add support for Ctrl+C / Ctrl-X / Ctrl-V with the system clipboard
+	// TODO Add support for drag'n'drop between file panes
+	// TODO Add a contextual menu to file entries
+	// TODO Use the new FileSystem API from Java 7 to introspect archive (zip, jar, war, etc) files
 	// TODO Add icons for each action
 	// TODO Implement the actions F3 -> F8
 	private final class AboutAction extends AbstractAction {
@@ -416,7 +420,15 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 	private TabbedPane activePane;
 
-	private volatile boolean shiftPressed = false;
+	/**
+	 * Whether the "shift" key is currently pressed.
+	 */
+	private volatile boolean shiftPressed;
+
+	/**
+	 * Whether the "meta" key (aka "command") is currently pressed.
+	 */
+	private volatile boolean metaPressed;
 
 	private final UserPreferences preferences = new UserPreferences();
 
@@ -642,6 +654,13 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 				logger.debug("[Shift] key pressed");
 			}
 		}
+		if ((e.getModifiers() | KeyEvent.META_MASK) == KeyEvent.META_MASK) {
+			metaPressed = true;
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("[Meta] key pressed");
+			}
+		}
 	}
 
 	@Override
@@ -651,6 +670,13 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 
 			if (logger.isDebugEnabled()) {
 				logger.debug("[Shift] key released");
+			}
+		}
+		if ((e.getModifiers() | KeyEvent.META_DOWN_MASK) == KeyEvent.META_DOWN_MASK) {
+			metaPressed = false;
+
+			if (logger.isDebugEnabled()) {
+				logger.debug("[Meta] key released");
 			}
 		}
 	}
