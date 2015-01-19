@@ -282,15 +282,31 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 				return;
 			}
 
-			// Store the inactive pane before the active one loses the focus
-			final TabbedPane inactivePane = getInactivePane();
+			// Count the # of files / folders to move
+			final Scan scan = Utils.scan(selection);
+
+			final String message;
+
+			if (scan.getFiles() > 0) {
+				if (scan.getDirectories() > 0) {
+					message = String.format("Do you really want to move %d file(s) & %d folder(s)", scan.getFiles(),
+							scan.getDirectories());
+				} else {
+					message = String.format("Do you really want to move %d file(s)", scan.getFiles());
+				}
+			} else {
+				message = String.format("Do you really want to move %d folders(s)", scan.getDirectories());
+			}
 
 			// TODO Set icon on dialog boxes
 			final int reply = JOptionPane.showConfirmDialog(DualCommander.this,
-					String.format("Do you really want to move %d file(s)", selection.size()), "Please confirm",
+					message, "Please confirm",
 					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
 			if (reply == JOptionPane.YES_OPTION) {
+				// Store the inactive pane before the active one loses the focus
+				final TabbedPane inactivePane = getInactivePane();
+
 				final SwingWorker<Void, Void> task = new SwingWorker<Void, Void>() {
 					@Override
 					protected Void doInBackground() throws Exception {
@@ -363,9 +379,6 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 			// What's the active pane's file selection ?
 			final List<File> selection = activePane.getActiveBrowser().getSelection();
 
-			// Store the active pane before it loses the focus
-			final TabbedPane activePane = getActivePane();
-
 			if (selection.isEmpty()) {
 				return;
 			}
@@ -391,8 +404,10 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
 			if (reply == JOptionPane.YES_OPTION) {
-				// Delete the file(s)
+				// Store the active pane before it loses the focus
+				final TabbedPane activePane = getActivePane();
 
+				// Delete the file(s) in a background thread
 				final SwingWorker<Void, Void> task = new SwingWorker<Void, Void>() {
 					@Override
 					protected Void doInBackground() throws Exception {
