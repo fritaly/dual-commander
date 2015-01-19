@@ -278,42 +278,60 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 			// What's the active pane's file selection ?
 			final List<File> selection = activePane.getActiveBrowser().getSelection();
 
+			if (selection.isEmpty()) {
+				return;
+			}
+
 			// Store the inactive pane before the active one loses the focus
 			final TabbedPane inactivePane = getInactivePane();
 
-			if (!selection.isEmpty()) {
-				// TODO Set icon on dialog boxes
-				final int reply = JOptionPane.showConfirmDialog(DualCommander.this,
-						String.format("Do you really want to move %d file(s)", selection.size()), "Please confirm",
-						JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+			// TODO Set icon on dialog boxes
+			final int reply = JOptionPane.showConfirmDialog(DualCommander.this,
+					String.format("Do you really want to move %d file(s)", selection.size()), "Please confirm",
+					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
-				if (reply == JOptionPane.YES_OPTION) {
-					// Move the file(s)
-					// TODO Use a swing worker and a progress bar (if necessary)
-					final File targetDir = inactivePane.getActiveBrowser().getDirectory();
+			if (reply == JOptionPane.YES_OPTION) {
+				final SwingWorker<Void, Void> task = new SwingWorker<Void, Void>() {
+					@Override
+					protected Void doInBackground() throws Exception {
+						// Move the file(s)
+						DualCommander.this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-					for (File file : selection) {
-						final String initialPath = file.getAbsolutePath();
+						// TODO Use a progress bar (if necessary)
+						final File targetDir = inactivePane.getActiveBrowser().getDirectory();
 
-						// TODO Check whether the target file already exists or
-						// not
-						final File targetFile = new File(targetDir, file.getName());
+						for (File file : selection) {
+							final String initialPath = file.getAbsolutePath();
 
-						file.renameTo(targetFile);
+							// TODO Check whether the target file already exists or
+							// not
+							final File targetFile = new File(targetDir, file.getName());
+
+							file.renameTo(targetFile);
+
+							if (logger.isInfoEnabled()) {
+								logger.info(String.format("Moved file %s to directory %s", initialPath, targetDir.getAbsolutePath()));
+							}
+						}
 
 						if (logger.isInfoEnabled()) {
-							logger.info(String.format("Moved file %s to directory %s", initialPath, targetDir.getAbsolutePath()));
+							logger.info(String.format("Moved %d file(s)", selection.size()));
 						}
+
+						return null;
 					}
 
-					// Refresh the 2 panes
-					leftPane.getActiveBrowser().refresh();
-					rightPane.getActiveBrowser().refresh();
+					@Override
+					protected void done() {
+						// Refresh the 2 panes
+						leftPane.getActiveBrowser().refresh();
+						rightPane.getActiveBrowser().refresh();
 
-					if (logger.isInfoEnabled()) {
-						logger.info(String.format("Moved %d file(s)", selection.size()));
+						DualCommander.this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 					}
-				}
+				};
+
+				task.execute();
 			}
 		}
 	}
