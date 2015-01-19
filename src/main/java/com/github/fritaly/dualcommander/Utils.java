@@ -27,9 +27,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -341,5 +343,25 @@ public class Utils {
     	Validate.notNull(font, "The given font is null");
 
     	return new Font(font.getName(), font.getStyle() | Font.BOLD, font.getSize());
+    }
+
+    public static Scan scan(Collection<File> collection) {
+    	Validate.notNull(collection, "The given collection of files is null");
+
+    	final Scan scan = new Scan();
+
+    	for (File element : collection) {
+			if (element.isFile()) {
+				scan.visitFile(element);
+			} else {
+				try {
+					Files.walkFileTree(element.toPath(), scan);
+				} catch (IOException e) {
+					throw new RuntimeException("Error when walking directory '" + element + "'", e);
+				}
+			}
+		}
+
+    	return scan;
     }
 }

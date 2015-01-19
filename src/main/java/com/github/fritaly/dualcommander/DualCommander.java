@@ -29,13 +29,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -377,56 +371,19 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 			}
 
 			// Count the # of files / folders to delete
-			final AtomicInteger numberOfFiles = new AtomicInteger();
-			final AtomicInteger numberOfFolders = new AtomicInteger();
-
-			for (File file : selection) {
-				if (file.isFile()) {
-					numberOfFiles.incrementAndGet();
-				} else {
-					try {
-						Files.walkFileTree(file.toPath(), new FileVisitor<Path>() {
-							@Override
-							public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-								numberOfFiles.incrementAndGet();
-
-								return FileVisitResult.CONTINUE;
-							}
-
-							@Override
-							public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-								numberOfFolders.incrementAndGet();
-
-								return FileVisitResult.CONTINUE;
-							}
-
-							@Override
-							public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-								return FileVisitResult.TERMINATE;
-							}
-
-							@Override
-							public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-								return FileVisitResult.CONTINUE;
-							}
-						});
-					} catch (IOException e1) {
-						throw new RuntimeException("Error when counting files & folders", e1);
-					}
-				}
-			}
+			final Scan scan = Utils.scan(selection);
 
 			final String message;
 
-			if ((numberOfFiles.get() > 0)) {
-				if ((numberOfFolders.get() > 0)) {
-					message = String.format("Do you really want to delete %d file(s) & %d folder(s)", numberOfFiles.get(),
-							numberOfFolders.get());
+			if (scan.getFiles() > 0) {
+				if (scan.getDirectories() > 0) {
+					message = String.format("Do you really want to delete %d file(s) & %d folder(s)", scan.getFiles(),
+							scan.getDirectories());
 				} else {
-					message = String.format("Do you really want to delete %d file(s)", numberOfFiles.get());
+					message = String.format("Do you really want to delete %d file(s)", scan.getFiles());
 				}
 			} else {
-				message = String.format("Do you really want to delete %d folders(s)", numberOfFolders.get());
+				message = String.format("Do you really want to delete %d folders(s)", scan.getDirectories());
 			}
 
 			// TODO Set icon on dialog boxes
