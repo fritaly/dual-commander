@@ -217,7 +217,7 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 					// TODO Use a progress bar (to notify the progress)
 					final File targetDir = inactivePane.getActiveBrowser().getDirectory();
 
-					DualCommander.this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+					setWaitCursor();
 
 					try {
 						for (File file : selection) {
@@ -257,7 +257,7 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 					// Refresh the target panel (the inactive one)
 					inactivePane.getActiveBrowser().refresh();
 
-					DualCommander.this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+					setDefaultCursor();
 				}
 			};
 
@@ -295,7 +295,7 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 					@Override
 					protected Void doInBackground() throws Exception {
 						// Move the file(s)
-						DualCommander.this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+						setWaitCursor();
 
 						// TODO Use a progress bar (if necessary)
 						final File targetDir = inactivePane.getActiveBrowser().getDirectory();
@@ -327,7 +327,7 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 						leftPane.getActiveBrowser().refresh();
 						rightPane.getActiveBrowser().refresh();
 
-						DualCommander.this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+						setDefaultCursor();
 					}
 				};
 
@@ -382,7 +382,7 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 					@Override
 					protected Void doInBackground() throws Exception {
 						// TODO Use a progress bar (if necessary)
-						DualCommander.this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+						setWaitCursor();
 
 						for (File file : selection) {
 							Utils.deleteRecursively(file, null);
@@ -400,7 +400,7 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 						// Refresh the source panel (the active one)
 						activePane.getActiveBrowser().refresh();
 
-						DualCommander.this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+						setDefaultCursor();
 					}
 				};
 
@@ -791,6 +791,14 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 			this.leftPane.getActiveBrowser().refresh();
 			this.rightPane.getActiveBrowser().refresh();
 		}
+	}
+
+	public void setDefaultCursor() {
+		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+	}
+
+	public void setWaitCursor() {
+		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 	}
 
 	public static void main(String[] args) {
