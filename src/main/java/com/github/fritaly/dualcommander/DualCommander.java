@@ -16,6 +16,7 @@
  */
 package com.github.fritaly.dualcommander;
 
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -49,6 +50,7 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -201,47 +203,65 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 			// What's the active pane's file selection ?
 			final List<File> selection = activePane.getActiveBrowser().getSelection();
 
+			if (selection.isEmpty()) {
+				return;
+			}
+
 			// Store the inactive pane before the active one loses the focus
 			final TabbedPane inactivePane = getInactivePane();
 
-			if (!selection.isEmpty()) {
-				// Copy the file(s)
-				// TODO Use a swing worker and a progress bar (if necessary)
-				final File targetDir = inactivePane.getActiveBrowser().getDirectory();
+			// Copy the file(s) in a background task
+			final SwingWorker<Void, Void> task = new SwingWorker<Void, Void>() {
+				@Override
+				protected Void doInBackground() throws Exception {
+					// TODO Use a progress bar (to notify the progress)
+					final File targetDir = inactivePane.getActiveBrowser().getDirectory();
 
-				try {
-					for (File file : selection) {
-						// TODO Check whether the target file already exists or
-						// not
+					DualCommander.this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-						if (file.isFile()) {
-							FileUtils.copyFileToDirectory(file, targetDir, true);
+					try {
+						for (File file : selection) {
+							// TODO Check whether the target file already exists or
+							// not
 
-							if (logger.isInfoEnabled()) {
-								logger.info(String.format("Copied file %s to directory %s", file.getAbsolutePath(),
-										targetDir.getAbsolutePath()));
-							}
-						} else if (file.isDirectory()) {
-							FileUtils.copyDirectoryToDirectory(file, targetDir);
+							if (file.isFile()) {
+								FileUtils.copyFileToDirectory(file, targetDir, true);
 
-							if (logger.isInfoEnabled()) {
-								logger.info(String.format("Copied directory %s to directory %s", file.getAbsolutePath(),
-										targetDir.getAbsolutePath()));
+								if (logger.isInfoEnabled()) {
+									logger.info(String.format("Copied file %s to directory %s", file.getAbsolutePath(),
+											targetDir.getAbsolutePath()));
+								}
+							} else if (file.isDirectory()) {
+								FileUtils.copyDirectoryToDirectory(file, targetDir);
+
+								if (logger.isInfoEnabled()) {
+									logger.info(String.format("Copied directory %s to directory %s", file.getAbsolutePath(),
+											targetDir.getAbsolutePath()));
+								}
 							}
 						}
+					} catch (IOException e1) {
+						JOptionPane.showMessageDialog(DualCommander.this, "An error occured when copying the file(s)", "Error",
+								JOptionPane.ERROR_MESSAGE);
 					}
-				} catch (IOException e1) {
-					JOptionPane.showMessageDialog(DualCommander.this, "An error occured when copying the file(s)", "Error",
-							JOptionPane.ERROR_MESSAGE);
+
+					if (logger.isInfoEnabled()) {
+						logger.info(String.format("Copied %d file(s)", selection.size()));
+					}
+
+					return null;
 				}
 
-				// Refresh the target panel (the inactive one)
-				inactivePane.getActiveBrowser().refresh();
+				@Override
+				protected void done() {
+					// Refresh the target panel (the inactive one)
+					inactivePane.getActiveBrowser().refresh();
 
-				if (logger.isInfoEnabled()) {
-					logger.info(String.format("Copied %d file(s)", selection.size()));
+					DualCommander.this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 				}
-			}
+			};
+
+			task.execute();
 		}
 	}
 
