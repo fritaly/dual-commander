@@ -207,61 +207,83 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 				return;
 			}
 
-			// Store the inactive pane before the active one loses the focus
-			final TabbedPane inactivePane = getInactivePane();
+			// Count the # of files / folders to copy
+			final Scan scan = Utils.scan(selection);
 
-			// Copy the file(s) in a background task
-			final SwingWorker<Void, Void> task = new SwingWorker<Void, Void>() {
-				@Override
-				protected Void doInBackground() throws Exception {
-					// TODO Use a progress bar (to notify the progress)
-					final File targetDir = inactivePane.getActiveBrowser().getDirectory();
+			final String message;
 
-					setWaitCursor();
+			if (scan.getFiles() > 0) {
+				if (scan.getDirectories() > 0) {
+					message = String.format("Do you really want to copy %d file(s) & %d folder(s)", scan.getFiles(),
+							scan.getDirectories());
+				} else {
+					message = String.format("Do you really want to copy %d file(s)", scan.getFiles());
+				}
+			} else {
+				message = String.format("Do you really want to copy %d folders(s)", scan.getDirectories());
+			}
 
-					try {
-						for (File file : selection) {
-							// TODO Check whether the target file already exists or
-							// not
+			// TODO Set icon on dialog boxes
+			final int reply = JOptionPane.showConfirmDialog(DualCommander.this, message, "Please confirm",
+					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
-							if (file.isFile()) {
-								FileUtils.copyFileToDirectory(file, targetDir, true);
+			if (reply == JOptionPane.YES_OPTION) {
+				// Store the inactive pane before the active one loses the focus
+				final TabbedPane inactivePane = getInactivePane();
 
-								if (logger.isInfoEnabled()) {
-									logger.info(String.format("Copied file %s to directory %s", file.getAbsolutePath(),
-											targetDir.getAbsolutePath()));
-								}
-							} else if (file.isDirectory()) {
-								FileUtils.copyDirectoryToDirectory(file, targetDir);
+				// Copy the file(s) in a background task
+				final SwingWorker<Void, Void> task = new SwingWorker<Void, Void>() {
+					@Override
+					protected Void doInBackground() throws Exception {
+						// TODO Use a progress bar (to notify the progress)
+						final File targetDir = inactivePane.getActiveBrowser().getDirectory();
 
-								if (logger.isInfoEnabled()) {
-									logger.info(String.format("Copied directory %s to directory %s", file.getAbsolutePath(),
-											targetDir.getAbsolutePath()));
+						setWaitCursor();
+
+						try {
+							for (File file : selection) {
+								// TODO Check whether the target file already exists or
+								// not
+
+								if (file.isFile()) {
+									FileUtils.copyFileToDirectory(file, targetDir, true);
+
+									if (logger.isInfoEnabled()) {
+										logger.info(String.format("Copied file %s to directory %s", file.getAbsolutePath(),
+												targetDir.getAbsolutePath()));
+									}
+								} else if (file.isDirectory()) {
+									FileUtils.copyDirectoryToDirectory(file, targetDir);
+
+									if (logger.isInfoEnabled()) {
+										logger.info(String.format("Copied directory %s to directory %s", file.getAbsolutePath(),
+												targetDir.getAbsolutePath()));
+									}
 								}
 							}
+
+							if (logger.isInfoEnabled()) {
+								logger.info(String.format("Copied %d file(s)", selection.size()));
+							}
+						} catch (IOException e1) {
+							JOptionPane.showMessageDialog(DualCommander.this, "An error occured when copying the file(s)", "Error",
+									JOptionPane.ERROR_MESSAGE);
 						}
-					} catch (IOException e1) {
-						JOptionPane.showMessageDialog(DualCommander.this, "An error occured when copying the file(s)", "Error",
-								JOptionPane.ERROR_MESSAGE);
+
+						return null;
 					}
 
-					if (logger.isInfoEnabled()) {
-						logger.info(String.format("Copied %d file(s)", selection.size()));
+					@Override
+					protected void done() {
+						// Refresh the target panel (the inactive one)
+						inactivePane.getActiveBrowser().refresh();
+
+						setDefaultCursor();
 					}
+				};
 
-					return null;
-				}
-
-				@Override
-				protected void done() {
-					// Refresh the target panel (the inactive one)
-					inactivePane.getActiveBrowser().refresh();
-
-					setDefaultCursor();
-				}
-			};
-
-			task.execute();
+				task.execute();
+			}
 		}
 	}
 
