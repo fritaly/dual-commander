@@ -348,26 +348,45 @@ public class DualCommander extends JFrame implements ChangeListener, WindowListe
 			// Store the active pane before it loses the focus
 			final TabbedPane activePane = getActivePane();
 
-			if (!selection.isEmpty()) {
-				// TODO Set icon on dialog boxes
-				final int reply = JOptionPane.showConfirmDialog(DualCommander.this,
-						String.format("Do you really want to delete %d file(s)", selection.size()), "Please confirm",
-						JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+			if (selection.isEmpty()) {
+				return;
+			}
 
-				if (reply == JOptionPane.YES_OPTION) {
-					// Delete the file(s)
-					// TODO Use a swing worker and a progress bar (if necessary)
-					for (File file : selection) {
-						Utils.deleteRecursively(file, null);
+			// TODO Set icon on dialog boxes
+			final int reply = JOptionPane.showConfirmDialog(DualCommander.this,
+					String.format("Do you really want to delete %d file(s)", selection.size()), "Please confirm",
+					JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+			if (reply == JOptionPane.YES_OPTION) {
+				// Delete the file(s)
+
+				final SwingWorker<Void, Void> task = new SwingWorker<Void, Void>() {
+					@Override
+					protected Void doInBackground() throws Exception {
+						// TODO Use a progress bar (if necessary)
+						DualCommander.this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+						for (File file : selection) {
+							Utils.deleteRecursively(file, null);
+						}
+
+						if (logger.isInfoEnabled()) {
+							logger.info(String.format("Deleted %d file(s)", selection.size()));
+						}
+
+						return null;
 					}
 
-					// Refresh the source panel (the active one)
-					activePane.getActiveBrowser().refresh();
+					@Override
+					protected void done() {
+						// Refresh the source panel (the active one)
+						activePane.getActiveBrowser().refresh();
 
-					if (logger.isInfoEnabled()) {
-						logger.info(String.format("Deleted %d file(s)", selection.size()));
+						DualCommander.this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 					}
-				}
+				};
+
+				task.execute();
 			}
 		}
 	}
